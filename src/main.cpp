@@ -1,7 +1,6 @@
-//
-// Created by Wolfgang on 26.03.18.
-//
+
+#include "library.h"
 
 int main (int argc, char *argv[]) {
-
+  hello();
 }
