@@ -44,4 +44,6 @@ install:
     fi
 
 scipt:
-  - cmake .
+  - cmake CMakeLists.txt
+  - make tests
+  - ctest

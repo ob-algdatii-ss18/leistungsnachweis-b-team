@@ -1,6 +1,0 @@
-#ifndef LEISTUNGSNACHWEIS_B_TEAM_LIBRARY_H
-#define LEISTUNGSNACHWEIS_B_TEAM_LIBRARY_H
-
-void hello();
-
-#endif

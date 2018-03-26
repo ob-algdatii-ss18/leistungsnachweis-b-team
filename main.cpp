@@ -1,6 +1,6 @@
 
-#include "library.h"
+#include "src/Add.h"
 
 int main (int argc, char *argv[]) {
-  hello();
+  add(5, 6);
 }
