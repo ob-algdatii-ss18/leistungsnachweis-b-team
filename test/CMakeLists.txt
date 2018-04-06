@@ -5,14 +5,10 @@ if (APPLE)
     add_definitions(-D__GLIBCXX__)
 endif (APPLE)
 
-add_executable(testBTree ${SRCS})
+add_executable(libbtree-test ${SRCS})
 
-target_link_libraries(testBTree
-        src
-        gtest
-        gmock
-        )
+target_link_libraries(libbtree-test libbtree gtest)
 
 include_directories("..")
 
-install(TARGETS testBTree DESTINATION bin)
+install(TARGETS libbtree-test DESTINATION bin)
