@@ -43,7 +43,7 @@ install:
       export PATH=${DEPS_DIR}/cmake/bin:${PATH}
     fi
 
-scipt:
+script:
   - cmake CMakeLists.txt
   - make tests
   - ctest
