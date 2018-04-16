@@ -12,3 +12,5 @@ target_link_libraries(libbtree-test libbtree gtest)
 include_directories("..")
 
 install(TARGETS libbtree-test DESTINATION bin)
+
+add_test(libtreetest libbtree-test)

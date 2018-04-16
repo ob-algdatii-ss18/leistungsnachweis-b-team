@@ -4,44 +4,13 @@ group: stable
 dist: trusty
 compiler: gcc
 
-env:
-  global:
-    # Ubuntu version
-    - LINUX_DIST=trusty
-    - DEPS_DIR=${TRAVIS_BUILD_DIR}/deps
-    # Global build options and C++ flags
-    - CXX_FLAGS="-Wall -pedantic -Werror -Wno-variadic-macros -Wno-long-long -Wno-shadow"
-    # Misc
-    - RUN_TESTS=true
-    - COVERAGE=false
-notifications:
-  email: false
-matrix:
-  include:
-    - os: linux
-      dist: trusty
-      sudo: true
-      compiler: gcc
-      addons:
-        apt:
-          sources:
-            - george-edison55-precise-backports
-          packages:
-            - cmake-data
-            - cmake
-
-install:
-  - echo ${PATH}
-  - echo ${CXX}
-  - ${CXX} --version
-  - ${CXX} -v
-  - |
-    if [[ ${TRAVIS_OS_NAME} == "linux" ]]; then
-      CMAKE_URL="http://www.cmake.org/files/v3.5/cmake-3.5.1-Linux-x86_64.tar.gz"
-      mkdir -p ${DEPS_DIR}/cmake
-      travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C ${DEPS_DIR}/cmake
-      export PATH=${DEPS_DIR}/cmake/bin:${PATH}
-    fi
+addons:
+  apt:
+    sources:
+      - george-edison55-precise-backports
+    packages:
+      - cmake-data
+      - cmake
 
 script:
   - cmake CMakeLists.txt
