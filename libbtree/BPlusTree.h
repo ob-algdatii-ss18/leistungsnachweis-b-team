@@ -21,11 +21,30 @@ public:
 
     }
 
-    bool insert(T* t) override;
+    bool insert(T* t) {
+        if (root == nullptr) {
+            this->root = new Node();
+        } else {
+            ;
+        }
+        return false;
+    }
 
-    T* search(int key) override;
 
-    T* remove(int key) override;
+    T* search(int key) {
+        if (root == nullptr) {
+            return nullptr;
+        }
+        return nullptr;
+    }
+
+    T* remove(int key) {
+        if (root == nullptr) {
+            return nullptr;
+        }
+        return nullptr;
+    }
+
 
 private:
   struct Element {

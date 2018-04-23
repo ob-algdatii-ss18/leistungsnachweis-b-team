@@ -1,6 +1,7 @@
 #include <iostream>
 #include <functional>
 #include <BPlusTree.h>
+#include <test.h>
 
 
 using namespace std;
@@ -10,7 +11,7 @@ int main (int argc, char *argv[]) {
   std::function<int(string)> keyConverter = [](string s){ return s.size(); };
 
 
-  BPlusTree::BPlusTree<string> * tree = new BPlusTree::BPlusTree(keyConverter, 4);
+  BPlusTree<string> * tree = new BPlusTree<string>(keyConverter, 4);
 
 
 

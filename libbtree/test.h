@@ -6,8 +6,10 @@
 #define LEISTUNGSNACHWEIS_B_TEAM_TEST_H
 
 
-template<class T>
-class test : public Collection<T> {
-
-};
+namespace test {
+    template<typename T>
+    class test {
+        T value;
+    };
+}
 #endif //LEISTUNGSNACHWEIS_B_TEAM_TEST_H

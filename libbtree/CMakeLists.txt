@@ -1,4 +1,4 @@
-set(libbtree_src Collection.h Adder.cpp Adder.h BPlusTree.cpp BPlusTree.h test.h)
+set(libbtree_src Collection.h Adder.cpp Adder.h BPlusTree.cpp BPlusTree.h test.h test.cpp)
 
 add_library(libbtree STATIC ${libbtree_src})
 
