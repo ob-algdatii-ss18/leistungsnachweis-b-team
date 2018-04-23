@@ -4,6 +4,7 @@
 
 #ifndef LEISTUNGSNACHWEIS_B_TEAM_COLLECTION_H
 #define LEISTUNGSNACHWEIS_B_TEAM_COLLECTION_H
+#include <functional>
 
 struct ProfilingResults {
   int comparisons;
@@ -21,15 +22,13 @@ template<class T>
 class Collection {
 
 private:
-
-  ProfilingResults* profile = nullptr;
-
+    ProfilingResults* profile = nullptr;
+protected:
+    const std::function<int(T)> valueToKeyConverter;
 public:
-
+    Collection(std::function<int(T)> keyConverter):valueToKeyConverter(keyConverter){}
   virtual bool insert(T* t)= 0;
-
   virtual T* search(int key)= 0;
-
   virtual T* remove(int key)= 0;
 
   int startProfiling() {

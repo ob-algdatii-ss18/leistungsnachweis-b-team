@@ -16,7 +16,7 @@ class BPlusTree : public Collection<T> {
 
 
 public:
-    BPlusTree(const int mSize, std::function<int(T)> keyConverter ):m(mSize), valueToKeyConverter(keyConverter){
+    BPlusTree(const int mSize, std::function<int(T)> keyConverter ): Collection(keyConverter), m(mSize){
     }
 
     bool insert(T* t) override ;

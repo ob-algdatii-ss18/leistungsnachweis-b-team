@@ -8,7 +8,7 @@ template<class T>
 bool BPlusTree<T>::insert(T* t) {
   if (root == nullptr) {
       this->root = new Node();
-      //return this->insert(key, t);
+      this->root
   } else {
     ;
   }
