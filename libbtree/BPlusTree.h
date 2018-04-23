@@ -16,12 +16,15 @@ class BPlusTree : public Collection<T> {
 
 
 public:
+
     BPlusTree(std::function<int(T)> keyConverter, const int mSize ):m(mSize), Collection<T>(keyConverter) {
 
     }
 
-    bool insert(T* t) override ;
+    bool insert(T* t) override;
+
     T* search(int key) override;
+
     T* remove(int key) override;
 
 private:
