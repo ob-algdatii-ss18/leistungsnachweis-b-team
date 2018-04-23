@@ -6,12 +6,23 @@
 #define LEISTUNGSNACHWEIS_B_TEAM_BPLUSTREE_H
 
 #include <vector>
+#include <functional>
 
 #include "Collection.h"
 
 
 template<class T>
 class BPlusTree : public Collection<T> {
+
+
+public:
+    BPlusTree(const int mSize, std::function<int(T)> keyConverter ):m(mSize), valueToKeyConverter(keyConverter){
+    }
+
+    bool insert(T* t) override ;
+    T* search(int key) override;
+    T* remove(int key) override;
+
 private:
   struct Element {
   };
@@ -27,15 +38,11 @@ private:
     T* data;
   };
 
-  int m;
+  const int m;
+  const std::function<int(T)> valueToKeyConverter;
   Node* root = nullptr;
 
-public:
-  bool insert(int ket, T* t);
 
-  T* search(int key) override;
-
-  T* remove(int key) override;
 };
 
 #endif //LEISTUNGSNACHWEIS_B_TEAM_BPLUSTREE_H

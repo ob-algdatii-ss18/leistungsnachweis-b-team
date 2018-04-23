@@ -26,7 +26,7 @@ private:
 
 public:
 
-  virtual bool insert(int ket, T* t)= 0;
+  virtual bool insert(T* t)= 0;
 
   virtual T* search(int key)= 0;
 

@@ -5,11 +5,12 @@
 #include "BPlusTree.h"
 
 template<class T>
-bool BPlusTree::insert(int ket, T* t) {
+bool BPlusTree<T>::insert(T* t) {
   if (root == nullptr) {
-
+      this->root = new Node();
+      //return this->insert(key, t);
   } else {
-
+    ;
   }
   return false;
 }
