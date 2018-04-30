@@ -25,7 +25,7 @@ public:
         if (root == nullptr) {
             this->root = new Node(m, nullptr);
             this->root->keys;
-            this->root->children.push_back(new Leaf(t));
+
         } else {
 
         }
@@ -48,12 +48,12 @@ public:
     }
 
 
-    std::ostream& operator<<(std::ostream& os, const BPlusTree& dt)
+    friend std::ostream& operator<<(std::ostream& os, const BPlusTree& tree)
     {
         // 2m as max key count, 3 digits per key max, 2-Times because of comma, plus 2 for ()
-        int blocksize = 2 * m * 3 * 2 + 2;
-        int depth = treeDepth();
-        os << std::string(blocksize * (depth/2), ' ') << this->root << std::string(blocksize * (depth/2), ' ') << std::endl;
+        int blocksize = 2 * tree.m * 3 * 2 + 2;
+        int depth = tree.treeDepth();
+        os << std::string(blocksize * (depth/2), ' ') << tree.root << std::string(blocksize * (depth/2), ' ') << std::endl;
 
 
         return os;
@@ -68,7 +68,7 @@ private:
   struct Element {
   };
 
-    int treeDepth(){
+    int treeDepth() const {
         const Node * currentNode = this->root;
         int depth = 0;
         while(!currentNode && currentNode->nodeSize > 0){
@@ -86,11 +86,11 @@ private:
     const int* keys;
     const int nodeSize;
     const Node* children;
-    std::ostream& operator<<(std::ostream& os, const BPlusTree& dt)
+    friend std::ostream& operator<<(std::ostream& os, const Node& node)
     {
           os << "(";
-           for(int i = 0; i < nodeSize; i++){
-              os <<  keys[i] << ",";
+           for(int i = 0; i < node.nodeSize; i++){
+              os <<  node.keys[i] << ",";
           }
           os << ")" << std::endl;
 
@@ -103,10 +103,10 @@ private:
   struct Leaf : public Element {
     int key;
     T* data;
-      std::ostream& operator<<(std::ostream& os, const BPlusTree& dt)
+      friend std::ostream& operator<<(std::ostream& os, const Leaf& leaf)
       {
 
-          os << "<" << data << ">" << std::endl;
+          os << "<" << leaf.data << ">" << std::endl;
           return os;
       }
   };
