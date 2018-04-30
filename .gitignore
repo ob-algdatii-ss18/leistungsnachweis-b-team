@@ -150,3 +150,4 @@ dkms.conf
 *.out
 *.app
 
+/cmake-build/
