@@ -25,7 +25,7 @@ public:
         if (root == nullptr) {
             this->root = new Node();
         } else {
-            ;
+
         }
         return false;
     }
