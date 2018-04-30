@@ -21,9 +21,10 @@ public:
 
     }
 
-    bool insert(T* t) {
+    bool insert(T* t) override {
         if (root == nullptr) {
             this->root = new Node();
+
         } else {
 
         }
@@ -31,14 +32,14 @@ public:
     }
 
 
-    T* search(int key) {
+    T* search(int key) override {
         if (root == nullptr) {
             return nullptr;
         }
         return nullptr;
     }
 
-    T* remove(int key) {
+    T* remove(int key) override {
         if (root == nullptr) {
             return nullptr;
         }
