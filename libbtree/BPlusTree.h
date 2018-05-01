@@ -19,6 +19,7 @@ public:
 
     BPlusTree(std::function<int(T)> keyConverter, const int mSize) : m(mSize), Collection<T>(keyConverter) {
         root = new Node(m, nullptr, true);
+        root->children[0] = nullptr;
     }
 
     bool insert(const T *t) override {
@@ -27,7 +28,6 @@ public:
 
         Node *result = root->insert(newLeaf);
 
-        std::cout << "insert result Node: "<< result << std::endl;
         if (result != nullptr) {
             Node *left = root;
             root = new Node(m, nullptr, false);
@@ -36,7 +36,7 @@ public:
             result->parent = root;
             root->children[1] = result;
             root->keys[0] = result->leftKey();
-            root->filling = 2;
+            root->filling = 1;
         }
 
         return false;
@@ -57,11 +57,14 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const BPlusTree &tree) {
         // 2m as max key count, 3 digits per key max, 2-Times because of comma, plus 2 for ()
+        /*
         int blocksize = 2 * tree.m * 3 * 2 + 2;
         int depth = tree.treeDepth();
         os << std::string(blocksize * (depth / 2), ' ') << tree.root << std::string(blocksize * (depth / 2), ' ')
            << std::endl;
+        */
 
+        os << *tree.root;
 
         return os;
     }
@@ -92,7 +95,7 @@ private:
 
         friend std::ostream &operator<<(std::ostream &os, const Leaf &leaf) {
 
-            os << "<" << leaf.data << ">" << std::endl;
+            os << "<key:" << leaf.key << ",data:" << leaf.data << ">" << std::endl;
             return os;
         }
     };
@@ -112,11 +115,24 @@ private:
         bool deepest;
 
         friend std::ostream &operator<<(std::ostream &os, const Node &node) {
+
             os << "(";
-            for (int i = 0; i < node.nodeSize; i++) {
-                os << node.keys[i] << ",";
+            for (int i = 0; i < node.filling; i++) {
+                if (node.deepest) {
+                    //os << static_cast<Leaf *>(node.children[i]) << " | " << node.keys[i] << " | ";
+                    os << node.children[i] << " | " << node.keys[i] << " | ";
+                } else {
+                    os << *static_cast<Node *>(node.children[i]) << " | " << node.keys[i] << " | ";
+                }
+
             }
-            os << ")" << std::endl;
+            if (node.deepest) {
+                //os << *static_cast<Leaf *>(node.children[node.filling]);
+                os << node.children[node.filling];
+            } else {
+                os << *static_cast<Node *>(node.children[node.filling]);
+            }
+            os << ")";
 
             return os;
         }
@@ -124,9 +140,9 @@ private:
         int leftKey() {
             int result;
             if (deepest) {
-                result = static_cast<Leaf*>(children[1])->key;
+                result = static_cast<Leaf *>(children[0])->key;
             } else {
-                result = static_cast<Node*>(children[0])->leftKey();
+                result = static_cast<Node *>(children[0])->leftKey();
             }
             return result;
         }
@@ -152,26 +168,29 @@ private:
                 }
             } else {
                 Node *res;
-                std::cout << index << "<" << filling << std::endl;
+                res = static_cast<Node *>(children[index])->insert(leaf);
 
-
-                std::cout << res << std::endl;
-                std::cout << children[index] << std::endl;
-                res = static_cast<Node*>(children[index])->insert(leaf);
-                std::cout << res << std::endl;
-
-                if(res != nullptr) {
+                if (res != nullptr) {
                     moveElements(index);
-                    keys[index] = res->keys[0];
-                    children[index] = res;
+                    keys[index] = res->leftKey();
+                    children[index + 1] = res;
+
+                    if (filling == nodeSize) {
+                        result = splitNode();
+                    } else {
+                        ++filling;
+                    }
                 }
+
             }
 
             // DEBUG output
+            std::cout << "INSERT RESULT: | ";
             for (int j = 0; j < filling; ++j) {
                 std::cout << children[j] << " | " << keys[j] << " | ";
             }
-            std::cout << children[filling] << std::endl;
+            std::cout << children[filling] << " |" << std::endl;
+            std::cout << "INSERT RETURN: " << result << std::endl;
 
 
             return result;
@@ -180,17 +199,19 @@ private:
         const T *search(int key) {
             const T *result = nullptr;
 
-            int index = 0;
-            while (index < filling && keys[index] < key) {
-                ++index;
-            }
-
-            if(deepest) {
-                if(static_cast<Leaf*>(children[index + 1])->key == key) {
-                    result = static_cast<Leaf*>(children[index + 1])->data;
+            if (filling > 0) {
+                int index = 0;
+                while (index < filling && keys[index] <= key) {
+                    ++index;
                 }
-            } else {
-                result = static_cast<Node*>(children[index])->search(key);
+
+                if (deepest) {
+                    if (children[index] != nullptr && static_cast<Leaf *>(children[index])->key == key) {
+                        result = static_cast<Leaf *>(children[index])->data;
+                    }
+                } else {
+                    result = static_cast<Node *>(children[index])->search(key);
+                }
             }
 
             return result;
@@ -207,17 +228,17 @@ private:
         Node *splitNode() {
             Node *rightNode = nullptr;
             if (filling == nodeSize) {
-                rightNode = new Node(nodeSize, parent, deepest);
+                rightNode = new Node(nodeSize / 2, parent, deepest);
                 int rightNodeIndex = 0;
                 for (int i = nodeSize / 2; i <= nodeSize; i++) {
-                    rightNode->keys[rightNodeIndex] = keys[i];
-                    rightNode->children[rightNodeIndex + 1] = children[i + 1];
-                    keys[i] = 0;
+                    rightNode->keys[rightNodeIndex] = keys[i + 1];
+                    rightNode->children[rightNodeIndex] = children[i + 1];
+                    keys[i + 1] = 0;
                     children[i + 1] = nullptr;
                     ++rightNodeIndex;
                 }
                 filling = nodeSize / 2;
-                rightNode->filling = nodeSize / 2 + 1;
+                rightNode->filling = nodeSize / 2;
 
             }
             return rightNode;
