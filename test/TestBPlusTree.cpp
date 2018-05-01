@@ -44,10 +44,32 @@ TEST(BPlusTree, InsertAndSearchOneElement) {
 
     const string* result = tree->search(key);
 
+    cout << *tree << endl;
+
     ASSERT_EQ(*result, data);
 }
 
-TEST(BPlusTree, InsertAndSearchTwoElements) {
+TEST(BPlusTree, InsertAndSearchTwoElementsLowerKeyFirst) {
+    std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
+    const string data1 = "tes";
+    const string data2 = "test";
+    int key1 = keyConverter(data1);
+    int key2 = keyConverter(data2);
+
+    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
+    tree->insert(&data1);
+    tree->insert(&data2);
+
+    const string *result1 = tree->search(key1);
+    const string *result2 = tree->search(key2);
+
+    cout << *tree << endl;
+
+    ASSERT_EQ(*result1, data1);
+    ASSERT_EQ(*result2, data2);
+}
+
+TEST(BPlusTree, InsertAndSearchTwoElementsLowerKeySecond) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -60,6 +82,9 @@ TEST(BPlusTree, InsertAndSearchTwoElements) {
 
     const string *result1 = tree->search(key1);
     const string *result2 = tree->search(key2);
+
+    cout << *tree << endl;
+
     ASSERT_EQ(*result1, data1);
     ASSERT_EQ(*result2, data2);
 }
@@ -81,6 +106,8 @@ TEST(BPlusTree, InsertAndSearchThreeElements) {
     const string *result1 = tree->search(key1);
     const string *result2 = tree->search(key2);
     const string *result3 = tree->search(key3);;
+
+    cout << *tree << endl;
 
     ASSERT_EQ(*result1, data1);
     ASSERT_EQ(*result2, data2);
@@ -109,6 +136,8 @@ TEST(BPlusTree, InsertAndSearchFourElements) {
     const string *result3 = tree->search(key3);
     const string *result4 = tree->search(key4);
 
+    cout << *tree << endl;
+
     ASSERT_EQ(*result1, data1);
     ASSERT_EQ(*result2, data2);
     ASSERT_EQ(*result3, data3);
@@ -130,21 +159,18 @@ TEST(BPlusTree, InsertAndSearchFiveElements) {
 
     BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
     tree->insert(&data1);
-    cout << *tree << endl;
     tree->insert(&data2);
-    cout << *tree << endl;
     tree->insert(&data3);
-    cout << *tree << endl;
     tree->insert(&data4);
-    cout << *tree << endl;
     tree->insert(&data5);
-    cout << *tree << endl;
 
     const string *result1 = tree->search(key1);
     const string *result2 = tree->search(key2);
     const string *result3 = tree->search(key3);
     const string *result4 = tree->search(key4);
     const string *result5 = tree->search(key5);
+
+    cout << *tree << endl;
 
     ASSERT_EQ(*result1, data1);
     ASSERT_EQ(*result2, data2);
@@ -153,7 +179,7 @@ TEST(BPlusTree, InsertAndSearchFiveElements) {
     ASSERT_EQ(*result5, data5);
 }
 
-TEST(BPlusTree, InsertAndSearchSevenElements) {
+TEST(BPlusTree, InsertAndSearchNineElements) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -162,6 +188,8 @@ TEST(BPlusTree, InsertAndSearchSevenElements) {
     const string data5 = "t";
     const string data6 = "666666";
     const string data7 = "7777777";
+    const string data8 = "88888888";
+    const string data9 = "999999999";
 
     int key1 = keyConverter(data1);
     int key2 = keyConverter(data2);
@@ -170,6 +198,8 @@ TEST(BPlusTree, InsertAndSearchSevenElements) {
     int key5 = keyConverter(data5);
     int key6 = keyConverter(data6);
     int key7 = keyConverter(data7);
+    int key8 = keyConverter(data8);
+    int key9 = keyConverter(data9);
 
     BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
     tree->insert(&data1);
@@ -179,6 +209,8 @@ TEST(BPlusTree, InsertAndSearchSevenElements) {
     tree->insert(&data5);
     tree->insert(&data6);
     tree->insert(&data7);
+    tree->insert(&data8);
+    tree->insert(&data9);
 
     const string *result1 = tree->search(key1);
     const string *result2 = tree->search(key2);
@@ -187,6 +219,8 @@ TEST(BPlusTree, InsertAndSearchSevenElements) {
     const string *result5 = tree->search(key5);
     const string *result6 = tree->search(key6);
     const string *result7 = tree->search(key7);
+    const string *result8 = tree->search(key8);
+    const string *result9 = tree->search(key9);
 
     cout << *tree << endl;
 
@@ -197,4 +231,67 @@ TEST(BPlusTree, InsertAndSearchSevenElements) {
     ASSERT_EQ(*result5, data5);
     ASSERT_EQ(*result6, data6);
     ASSERT_EQ(*result7, data7);
+    ASSERT_EQ(*result8, data8);
+    ASSERT_EQ(*result9, data9);
+}
+
+TEST(BPlusTree, InsertAndSearchTenElements) {
+    std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
+    const string data1 = "test";
+    const string data2 = "tes";
+    const string data3 = "test5";
+    const string data4 = "te";
+    const string data5 = "t";
+    const string data6 = "666666";
+    const string data7 = "7777777";
+    const string data8 = "88888888";
+    const string data9 = "999999999";
+    const string data10 = "";
+
+    int key1 = keyConverter(data1);
+    int key2 = keyConverter(data2);
+    int key3 = keyConverter(data3);
+    int key4 = keyConverter(data4);
+    int key5 = keyConverter(data5);
+    int key6 = keyConverter(data6);
+    int key7 = keyConverter(data7);
+    int key8 = keyConverter(data8);
+    int key9 = keyConverter(data9);
+    int key10 = keyConverter(data10);
+
+    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
+    tree->insert(&data1);
+    tree->insert(&data2);
+    tree->insert(&data3);
+    tree->insert(&data4);
+    tree->insert(&data5);
+    tree->insert(&data6);
+    tree->insert(&data7);
+    tree->insert(&data8);
+    tree->insert(&data9);
+    tree->insert(&data10);
+
+    const string *result1 = tree->search(key1);
+    const string *result2 = tree->search(key2);
+    const string *result3 = tree->search(key3);
+    const string *result4 = tree->search(key4);
+    const string *result5 = tree->search(key5);
+    const string *result6 = tree->search(key6);
+    const string *result7 = tree->search(key7);
+    const string *result8 = tree->search(key8);
+    const string *result9 = tree->search(key9);
+    const string *result10 = tree->search(key10);
+
+    cout << *tree << endl;
+
+    ASSERT_EQ(*result1, data1);
+    ASSERT_EQ(*result2, data2);
+    ASSERT_EQ(*result3, data3);
+    ASSERT_EQ(*result4, data4);
+    ASSERT_EQ(*result5, data5);
+    ASSERT_EQ(*result6, data6);
+    ASSERT_EQ(*result7, data7);
+    ASSERT_EQ(*result8, data8);
+    ASSERT_EQ(*result9, data9);
+    ASSERT_EQ(*result10, data10);
 }

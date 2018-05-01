@@ -74,17 +74,6 @@ private:
     struct Element {
     };
 
-    int treeDepth() const {
-        const Node *currentNode = this->root;
-        int depth = 0;
-        while (!currentNode && currentNode->nodeSize > 0) {
-            ++depth;
-            currentNode = &currentNode->children[0];
-        }
-
-        return depth;
-    }
-
     struct Leaf : public Element {
         Leaf(int key, const T *data) : key(key), data(data) {
 
@@ -156,15 +145,29 @@ private:
             }
 
             if (deepest) {
-                moveElements(index);
-
-                keys[index] = leaf->key;
-                children[index + 1] = leaf;
-
-                if (filling == nodeSize) {
-                    result = splitNode();
+                if (filling == 1 && children[0] == nullptr) {
+                    if (index == 0) {
+                        children[0] = leaf;
+                    } else {
+                        children[0] = children[1];
+                        children[1] = leaf;
+                        keys[0] = leaf->key;
+                    }
                 } else {
-                    ++filling;
+                    moveElements(index);
+                    if (index == 0 && filling > 0) {
+                        children[0] = leaf;
+                        keys[0] = static_cast<Leaf *>(children[1])->key;
+                    } else {
+                        keys[index] = leaf->key;
+                        children[index + 1] = leaf;
+                    }
+                    if (filling == nodeSize) {
+                        result = splitNode();
+                    } else {
+                        ++filling;
+                    }
+
                 }
             } else {
                 Node *res;
@@ -185,11 +188,7 @@ private:
             }
 
             // DEBUG output
-            std::cout << "INSERT RESULT: | ";
-            for (int j = 0; j < filling; ++j) {
-                std::cout << children[j] << " | " << keys[j] << " | ";
-            }
-            std::cout << children[filling] << " |" << std::endl;
+            std::cout << "INSERT RESULT:  " << *this << std::endl;
             std::cout << "INSERT RETURN: " << result << std::endl;
 
 
@@ -219,7 +218,7 @@ private:
 
     private:
         void moveElements(int index) {
-            for (int i = filling; i > index; i--) {
+            for (int i = filling; i >= index; i--) {
                 keys[i] = keys[i - 1];
                 children[i + 1] = children[i];
             }
