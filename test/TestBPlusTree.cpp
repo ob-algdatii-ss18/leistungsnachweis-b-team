@@ -8,7 +8,7 @@
 using namespace std;
 
 
-TEST(BPlusTree, SearchInAEmptyTree) {
+TEST(BPlusTreeM1, SearchInAEmptyTree) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
 
     BPlusTree<string> * tree = new BPlusTree<string>(keyConverter, 1);
@@ -17,7 +17,7 @@ TEST(BPlusTree, SearchInAEmptyTree) {
     ASSERT_EQ(result, nullptr);
 }
 
-TEST(BPlusTree, SearchNotExistingElemnt) {
+TEST(BPlusTreeM1, SearchNotExistingElemnt) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
     const string data = "test";
     int key = keyConverter(data);
@@ -34,7 +34,7 @@ TEST(BPlusTree, SearchNotExistingElemnt) {
     ASSERT_EQ(result3, nullptr);
 }
 
-TEST(BPlusTree, InsertAndSearchOneElement) {
+TEST(BPlusTreeM1, InsertAndSearchOneElement) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
     const string data = "test";
     int key = keyConverter(data);
@@ -49,7 +49,7 @@ TEST(BPlusTree, InsertAndSearchOneElement) {
     ASSERT_EQ(*result, data);
 }
 
-TEST(BPlusTree, InsertAndSearchTwoElementsLowerKeyFirst) {
+TEST(BPlusTreeM1, InsertAndSearchTwoElementsLowerKeyFirst) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "tes";
     const string data2 = "test";
@@ -69,7 +69,7 @@ TEST(BPlusTree, InsertAndSearchTwoElementsLowerKeyFirst) {
     ASSERT_EQ(*result2, data2);
 }
 
-TEST(BPlusTree, InsertAndSearchTwoElementsLowerKeySecond) {
+TEST(BPlusTreeM1, InsertAndSearchTwoElementsLowerKeySecond) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -89,7 +89,7 @@ TEST(BPlusTree, InsertAndSearchTwoElementsLowerKeySecond) {
     ASSERT_EQ(*result2, data2);
 }
 
-TEST(BPlusTree, InsertAndSearchThreeElements) {
+TEST(BPlusTreeM1, InsertAndSearchThreeElements) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -114,7 +114,7 @@ TEST(BPlusTree, InsertAndSearchThreeElements) {
     ASSERT_EQ(*result3, data3);
 }
 
-TEST(BPlusTree, InsertAndSearchFourElements) {
+TEST(BPlusTreeM1, InsertAndSearchFourElements) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -144,7 +144,7 @@ TEST(BPlusTree, InsertAndSearchFourElements) {
     ASSERT_EQ(*result4, data4);
 }
 
-TEST(BPlusTree, InsertAndSearchFiveElements) {
+TEST(BPlusTreeM1, InsertAndSearchFiveElements) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -179,7 +179,7 @@ TEST(BPlusTree, InsertAndSearchFiveElements) {
     ASSERT_EQ(*result5, data5);
 }
 
-TEST(BPlusTree, InsertAndSearchNineElements) {
+TEST(BPlusTreeM1, InsertAndSearchNineElements) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -235,7 +235,7 @@ TEST(BPlusTree, InsertAndSearchNineElements) {
     ASSERT_EQ(*result9, data9);
 }
 
-TEST(BPlusTree, InsertAndSearchTenElements) {
+TEST(BPlusTreeM1, InsertAndSearchTenElements) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -296,7 +296,7 @@ TEST(BPlusTree, InsertAndSearchTenElements) {
     ASSERT_EQ(*result10, data10);
 }
 
-TEST(BPlusTree, RemoveFromEmptyTree) {
+TEST(BPlusTreeM1, RemoveFromEmptyTree) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
 
     BPlusTree<string> * tree = new BPlusTree<string>(keyConverter, 1);
@@ -309,7 +309,7 @@ TEST(BPlusTree, RemoveFromEmptyTree) {
     ASSERT_EQ(result, nullptr);
 }
 
-TEST(BPlusTree, RemoveNotExisingElement) {
+TEST(BPlusTreeM1, RemoveNotExisingElement) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
     const string data = "test";
     int key = keyConverter(data);
@@ -326,7 +326,7 @@ TEST(BPlusTree, RemoveNotExisingElement) {
     ASSERT_EQ(*result2, data);
 }
 
-TEST(BPlusTree, InsertAndRemoveOneElement) {
+TEST(BPlusTreeM1, InsertAndRemoveOneElement) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
     const string data = "test";
     int key = keyConverter(data);
@@ -342,7 +342,7 @@ TEST(BPlusTree, InsertAndRemoveOneElement) {
     ASSERT_EQ(result, nullptr);
 }
 
-TEST(BPlusTree, InsertTwoElementsRemoveTheLowerKeyElement) {
+TEST(BPlusTreeM1, InsertTwoElementsRemoveTheLowerKeyElement) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "tes";
     const string data2 = "test";
@@ -363,7 +363,7 @@ TEST(BPlusTree, InsertTwoElementsRemoveTheLowerKeyElement) {
     ASSERT_EQ(*result2, data2);
 }
 
-TEST(BPlusTree, InsertTwoElementsRemoveTheUpperKeyElement) {
+TEST(BPlusTreeM1, InsertTwoElementsRemoveTheUpperKeyElement) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "tes";
     const string data2 = "test";
@@ -384,7 +384,7 @@ TEST(BPlusTree, InsertTwoElementsRemoveTheUpperKeyElement) {
     ASSERT_EQ(result2, nullptr);
 }
 
-TEST(BPlusTree, InsertThreeElementsRemoveLeft) {
+TEST(BPlusTreeM1, InsertThreeElementsRemoveLeft) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -411,7 +411,7 @@ TEST(BPlusTree, InsertThreeElementsRemoveLeft) {
     ASSERT_EQ(*result3, data3);
 }
 
-TEST(BPlusTree, InsertThreeElementsRemoveMiddle) {
+TEST(BPlusTreeM1, InsertThreeElementsRemoveMiddle) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -438,7 +438,7 @@ TEST(BPlusTree, InsertThreeElementsRemoveMiddle) {
     ASSERT_EQ(*result3, data3);
 }
 
-TEST(BPlusTree, InsertThreeElementsRemoveRight) {
+TEST(BPlusTreeM1, InsertThreeElementsRemoveRight) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -465,7 +465,7 @@ TEST(BPlusTree, InsertThreeElementsRemoveRight) {
     ASSERT_EQ(result3, nullptr);
 }
 
-TEST(BPlusTree, InsertFourElementsRemoveOne) {
+TEST(BPlusTreeM1, InsertFourElementsRemoveOne) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -497,7 +497,7 @@ TEST(BPlusTree, InsertFourElementsRemoveOne) {
     ASSERT_EQ(*result4, data4);
 }
 
-TEST(BPlusTree, InsertFiveElementsRemoveOne) {
+TEST(BPlusTreeM1, InsertFiveElementsRemoveOne) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -532,4 +532,145 @@ TEST(BPlusTree, InsertFiveElementsRemoveOne) {
     ASSERT_EQ(*result3, data3);
     ASSERT_EQ(*result4, data4);
     ASSERT_EQ(*result5, data5);
+}
+
+TEST(BPlusTreeM2, InsertSixElements) {
+    int elementCount = 6;
+
+    std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
+    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
+
+    string *data = new string[elementCount];
+    int *keys = new int[elementCount];
+    for (int i = 0; i < elementCount; ++i) {
+        data[i] = std::to_string(i * 2 + 2);
+        keys[i] = keyConverter(data[i]);
+    }
+
+    for (int i = 0; i < elementCount; ++i) {
+        tree->insert(&data[i]);
+    }
+
+    cout << *tree << endl;
+
+    for (int i = 0; i < elementCount; ++i) {
+        ASSERT_EQ(*tree->search(keys[i]), data[i]);
+    }
+}
+
+TEST(BPlusTreeM2, InsertTwentyOneElements) {
+    int elementCount = 21;
+
+    std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
+    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
+
+    string *data = new string[elementCount];
+    int *keys = new int[elementCount];
+    for (int i = 0; i < elementCount; ++i) {
+        data[i] = std::to_string(i * 2 + 2);
+        keys[i] = keyConverter(data[i]);
+    }
+
+    for (int i = 0; i < elementCount; ++i) {
+        tree->insert(&data[i]);
+    }
+
+    cout << *tree << endl;
+
+    for (int i = 0; i < elementCount; ++i) {
+        ASSERT_EQ(*tree->search(keys[i]), data[i]);
+    }
+}
+
+TEST(BPlusTreeM2, InsertSixElementsRemoveFirst) {
+    int elementCount = 6;
+    int removeElementIndex = 0;
+
+    std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
+    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
+
+    string *data = new string[elementCount];
+    int *keys = new int[elementCount];
+    for (int i = 0; i < elementCount; ++i) {
+        data[i] = std::to_string(i * 2 + 2);
+        keys[i] = keyConverter(data[i]);
+    }
+
+    for (int i = 0; i < elementCount; ++i) {
+        tree->insert(&data[i]);
+    }
+
+    tree->remove(keys[removeElementIndex]);
+
+    cout << *tree << endl;
+
+    for (int i = 0; i < elementCount; ++i) {
+        if(i == removeElementIndex) {
+            ASSERT_EQ(tree->search(keys[i]), nullptr);
+        } else {
+            ASSERT_EQ(*tree->search(keys[i]), data[i]);
+        }
+    }
+}
+
+TEST(BPlusTreeM2, InsertSevenElementsRemoveFirst) {
+    int elementCount = 7;
+    int removeElementIndex = 0;
+
+    std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
+    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
+
+    string *data = new string[elementCount];
+    int *keys = new int[elementCount];
+    for (int i = 0; i < elementCount; ++i) {
+        data[i] = std::to_string(i * 2 + 2);
+        keys[i] = keyConverter(data[i]);
+    }
+
+    for (int i = 0; i < elementCount; ++i) {
+        tree->insert(&data[i]);
+    }
+
+    tree->remove(keys[removeElementIndex]);
+
+    cout << *tree << endl;
+
+    for (int i = 0; i < elementCount; ++i) {
+        if(i == removeElementIndex) {
+            ASSERT_EQ(tree->search(keys[i]), nullptr);
+        } else {
+            ASSERT_EQ(*tree->search(keys[i]), data[i]);
+        }
+    }
+}
+
+TEST(BPlusTreeM2, InsertTwentyOneElementsRemoveFirst) {
+    int elementCount = 21;
+    int removeElementIndex = 0;
+
+    std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
+    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
+
+    string *data = new string[elementCount];
+    int *keys = new int[elementCount];
+    for (int i = 0; i < elementCount; ++i) {
+        data[i] = std::to_string(i * 2 + 2);
+        keys[i] = keyConverter(data[i]);
+    }
+
+    for (int i = 0; i < elementCount; ++i) {
+        tree->insert(&data[i]);
+    }
+
+    tree->remove(keys[removeElementIndex]);
+
+    cout << *tree << endl;
+
+    for (int i = 0; i < elementCount; ++i) {
+        if(i == removeElementIndex) {
+            ASSERT_EQ(tree->search(keys[i]), nullptr);
+        } else {
+            ASSERT_EQ(*tree->search(keys[i]), data[i]);
+        }
+    }
 }

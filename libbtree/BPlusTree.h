@@ -242,32 +242,36 @@ private:
                                 result = this;
                             }
                         } else {
-                            std::cout << "index: " << index <<std::endl;
                             moveElementsLeft(index);
                             --filling;
+                            if(filling < nodeSize) {
+                                result = this;
+                            }
                         }
-
-
-                        //result = static_cast<Leaf *>(children[index])->data;
-
                     }
                 } else {
                     Node *res = static_cast<Node *>(children[index])->remove(key);
+                    std::cout << "res: " << res << std::endl;
                     if(res != nullptr) {
                         Node *concated;
+                        Node *left;
                         if(index == 0) {
+                            left = static_cast<Node *>(children[0]);
                             concated = concatNodes(static_cast<Node *>(children[0]), static_cast<Node *>(children[1]));
                         } else {
+                            left = static_cast<Node *>(children[index - 1]);
                             concated = concatNodes(static_cast<Node *>(children[index - 1]), static_cast<Node *>(children[index]));
                         }
 
-                        if(concated->filling == 1) {
-                            children[index] = res;
-                            keys[index - 1] = res->leftKey();
+                        if(concated == nullptr) {
+                            result = left;
                         } else {
-                            result = concated;
+                            children[index] = concated->children[0];
+                            children[index + 1] = concated->children[1];
+                            keys[index] = concated->keys[0];
                         }
                         std::cout << "concated: " << concated <<std::endl;
+                        std::cout << *left <<std::endl;
                     }
                     std::cout << "result: " << result <<std::endl;
                 }
@@ -317,30 +321,73 @@ private:
         }
 
         Node *concatNodes(Node *left, Node *right) {
-            int index = left->filling + 1;
+            Node *result = nullptr;
+            int overallFilling = left->filling + right->filling;
 
-            for(int i = 0; i <= right->filling; i++) {
-                if(right->children[i] != nullptr) {
-                    left->children[index] = right->children[i];
-                    if(left->deepest) {
-                        left->keys[index - 1] = static_cast<Leaf *>(left->children[index])->key;
-                    }else {
-                        left->keys[index - 1] = static_cast<Node *>(left->children[index])->leftKey();
+            if(overallFilling < nodeSize) {
+                int index = left->filling + 1;
+
+                for(int i = 0; i <= right->filling; i++) {
+                    if(right->children[i] != nullptr) {
+                        left->children[index] = right->children[i];
+                        if(left->deepest) {
+                            left->keys[index - 1] = static_cast<Leaf *>(left->children[index])->key;
+                        }else {
+                            left->keys[index - 1] = static_cast<Node *>(left->children[index])->leftKey();
+                        }
+                        ++left->filling;
+                        ++index;
                     }
-                    ++left->filling;
-                    ++index;
                 }
-            }
-
-            if(left->filling > nodeSize) {
+            } else {
                 std::cout << "over filling" << std::endl;
-                Node *newRight = splitNode();
+                Node *newUpper = new Node(nodeSize / 2, parent, deepest);
+                //Node *newRight = new Node(nodeSize / 2, newUpper, left->deepest);
+                left->parent = newUpper;
+                std::cout << "overallFilling: " << overallFilling << std::endl;
+
+                if(left->filling < overallFilling / 2) {
+                    for (int i = left->filling + 1; i <= overallFilling / 2; ++i) {
+                        left->children[i] = right->children[0];
+                        right->moveElementsLeft(0);
+                        if(left->deepest) {
+                            left->keys[i - 1] = static_cast<Leaf *>(left->children[i])->key;
+                        }else {
+                            left->keys[i - 1] = static_cast<Node *>(left->children[i])->leftKey();
+                        }
+                        ++left->filling;
+                        --right->filling;
+                    }
+                } else {
+                    std::cout << "left over filling" << std::endl;
+                    int leftFormerFilling = left->filling;
+                    for (int i = overallFilling / 2 + 1; i <= leftFormerFilling; ++i) {
+                        right->moveElementsRight(0);
+                        right->children[0] = left->children[i];
+                        if(right->deepest) {
+                            right->keys[0] = static_cast<Leaf *>(left->children[1])->key;
+                        }else {
+                            right->keys[0] = static_cast<Node *>(left->children[1])->leftKey();
+                        }
+                        --left->filling;
+                        ++right->filling;
+                    }
+                }
+
+                newUpper->children[0] = left;
+                newUpper->children[1] = right;
+                newUpper->keys[0] = right->leftKey();
+                newUpper->filling = 1;
+
+                result = newUpper;
+                std::cout << *newUpper << std::endl;
+
                 std::cout << *left << std::endl;
-                std::cout << *newRight << std::endl;
+                std::cout << *right << std::endl;
             }
 
             std::cout << *left << std::endl;
-            return left;
+            return result;
         }
 
     };
