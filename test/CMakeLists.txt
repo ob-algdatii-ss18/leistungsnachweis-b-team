@@ -7,7 +7,7 @@ endif (APPLE)
 
 add_executable(libbtree-test ${SRCS} TestBPlusTree.cpp)
 
-target_link_libraries(libbtree-test libbtree gtest)
+target_link_libraries(libbtree-test libbtree gtest pthread)
 
 include_directories("..")
 
