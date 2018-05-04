@@ -210,6 +210,7 @@ private:
                 if (deepest) {
                     if (children[index] != nullptr && static_cast<Leaf *>(children[index])->key == key) {
                         result = static_cast<Leaf *>(children[index])->data;
+
                     }
                 } else {
                     result = static_cast<Node *>(children[index])->search(key);
@@ -251,7 +252,6 @@ private:
                     }
                 } else {
                     Node *res = static_cast<Node *>(children[index])->remove(key);
-                    std::cout << "res: " << res << std::endl;
 
                     if (res != nullptr) {
                         Node *concated;
@@ -277,14 +277,10 @@ private:
                                 }
                             }
                         } else {
-                            std::cout << "filling: " << filling << std::endl;
-                            std::cout << "index: " << index << std::endl;
-                            std::cout << "keys[index]: " << keys[index] << std::endl;
-                            std::cout << *this << std::endl;
                             if (filling == 1) {
-                                children[index] = concated->children[0];
-                                children[index + 1] = concated->children[1];
-                                keys[index] = concated->keys[0];
+                                children[0] = concated->children[0];
+                                children[1] = concated->children[1];
+                                keys[0] = concated->keys[0];
                             } else {
                                 moveElementsLeft(index);
                                 --filling;
@@ -293,10 +289,7 @@ private:
                                 }
                             }
                         }
-                        std::cout << "concated: " << concated << std::endl;
-                        std::cout << *left << std::endl;
                     }
-                    std::cout << "result: " << result << std::endl;
                 }
 
 
@@ -351,6 +344,10 @@ private:
             Node *result = nullptr;
             int overallFilling = left->filling + right->filling;
 
+            if(left->children[0] == nullptr || right->children[0] == nullptr) {
+                --overallFilling;
+            }
+
             if (overallFilling < nodeSize) {
                 int index = left->filling + 1;
 
@@ -367,11 +364,8 @@ private:
                     }
                 }
             } else {
-                std::cout << "over filling" << std::endl;
                 Node *newUpper = new Node(nodeSize / 2, parent, deepest);
-                //Node *newRight = new Node(nodeSize / 2, newUpper, left->deepest);
                 left->parent = newUpper;
-                std::cout << "overallFilling: " << overallFilling << std::endl;
 
                 if (left->filling < overallFilling / 2) {
                     for (int i = left->filling + 1; i <= overallFilling / 2; ++i) {
@@ -386,19 +380,26 @@ private:
                         --right->filling;
                     }
                 } else {
-                    std::cout << "left over filling" << std::endl;
                     int leftFormerFilling = left->filling;
                     for (int i = overallFilling / 2 + 1; i <= leftFormerFilling; ++i) {
-                        right->moveElementsRight(0);
-                        right->children[0] = left->children[i];
-                        if (right->deepest) {
-                            right->keys[0] = static_cast<Leaf *>(left->children[1])->key;
+                        if(right->children[0] == nullptr) {
+                            --right->filling;
                         } else {
-                            right->keys[0] = static_cast<Node *>(left->children[1])->leftKey();
+                            right->moveElementsRight(0);
                         }
+                        right->children[0] = left->children[i];
                         --left->filling;
                         ++right->filling;
+
+                        if (right->deepest) {
+                            right->keys[0] = static_cast<Leaf *>(right->children[1])->key;
+                        } else {
+                            right->keys[0] = static_cast<Node *>(right->children[1])->leftKey();
+                        }
+
                     }
+
+
                 }
 
                 newUpper->children[0] = left;
@@ -407,13 +408,7 @@ private:
                 newUpper->filling = 1;
 
                 result = newUpper;
-                std::cout << *newUpper << std::endl;
-
-                std::cout << *left << std::endl;
-                std::cout << *right << std::endl;
             }
-
-            std::cout << *left << std::endl;
             return result;
         }
 
