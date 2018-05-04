@@ -191,8 +191,8 @@ private:
             }
 
             // DEBUG output
-            std::cout << "INSERT RESULT:  " << *this << std::endl;
-            std::cout << "INSERT RETURN: " << result << std::endl;
+            //std::cout << "INSERT RESULT:  " << *this << std::endl;
+            //std::cout << "INSERT RETURN: " << result << std::endl;
 
 
             return result;
@@ -245,7 +245,7 @@ private:
                         } else {
                             moveElementsLeft(index);
                             --filling;
-                            if (filling < nodeSize) {
+                            if (filling < nodeSize / 2) {
                                 result = this;
                             }
                         }
@@ -272,7 +272,7 @@ private:
                                 moveElementsLeft(index);
                                 --filling;
                                 children[index] = left;
-                                if (filling < nodeSize) {
+                                if (filling < nodeSize / 2) {
                                     result = this;
                                 }
                             }
@@ -284,7 +284,7 @@ private:
                             } else {
                                 moveElementsLeft(index);
                                 --filling;
-                                if (filling < nodeSize) {
+                                if (filling < nodeSize / 2) {
                                     result = concated;
                                 }
                             }
@@ -295,6 +295,7 @@ private:
 
             }
 
+            /*
             // DEBUG output
             std::cout << "DELETE RESULT:  " << *this << std::endl;
             if (result == nullptr) {
@@ -302,7 +303,7 @@ private:
             } else {
                 std::cout << "DELETE RETURN: " << *result << std::endl;
             }
-
+            */
             return result;
         }
 

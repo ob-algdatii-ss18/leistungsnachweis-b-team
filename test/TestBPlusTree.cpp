@@ -674,3 +674,124 @@ TEST(BPlusTreeM2, InsertTwentyOneElementsRemoveFirst) {
         }
     }
 }
+
+TEST(BPlusTreeM2, InsertTwentyOneElementsRemoveAllFromFirstToLast) {
+    int elementCount = 21;
+
+    std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
+    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
+
+    string *data = new string[elementCount];
+    int *keys = new int[elementCount];
+    for (int i = 0; i < elementCount; ++i) {
+        data[i] = std::to_string(i * 2 + 2);
+        keys[i] = keyConverter(data[i]);
+    }
+
+    for (int i = 0; i < elementCount; ++i) {
+        tree->insert(&data[i]);
+    }
+
+    cout << *tree << endl;
+
+    for (int removeElementIndex = 0; removeElementIndex < elementCount; ++removeElementIndex) {
+
+        tree->remove(keys[removeElementIndex]);
+
+        cout << *tree << endl;
+
+        for (int i = 0; i < elementCount; ++i) {
+            if (i <= removeElementIndex) {
+                ASSERT_EQ(tree->search(keys[i]), nullptr);
+            } else {
+                ASSERT_EQ(*tree->search(keys[i]), data[i]);
+            }
+        }
+    }
+}
+
+TEST(BPlusTreeM2, InsertTwentyOneElementsRemoveAllFromLastToFirst) {
+    int elementCount = 21;
+
+    std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
+    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
+
+    string *data = new string[elementCount];
+    int *keys = new int[elementCount];
+    for (int i = 0; i < elementCount; ++i) {
+        data[i] = std::to_string(i * 2 + 2);
+        keys[i] = keyConverter(data[i]);
+    }
+
+    for (int i = 0; i < elementCount; ++i) {
+        tree->insert(&data[i]);
+    }
+
+    cout << *tree << endl;
+
+    for (int removeElementIndex = elementCount-1; removeElementIndex >= 0; --removeElementIndex) {
+
+        tree->remove(keys[removeElementIndex]);
+
+        cout << *tree << endl;
+
+        for (int i = elementCount -1; i >= 0; --i) {
+            if (i >= removeElementIndex) {
+                ASSERT_EQ(tree->search(keys[i]), nullptr);
+            } else {
+                ASSERT_EQ(*tree->search(keys[i]), data[i]);
+            }
+        }
+    }
+}
+
+TEST(BPlusTree, UltimateInsertAndDeleteTest) {
+    int elementCount = 1000;
+
+    std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
+
+
+    string *data = new string[elementCount];
+    int *keys = new int[elementCount];
+    for (int i = 0; i < elementCount; ++i) {
+        data[i] = std::to_string(i * 2 + 2);
+        keys[i] = keyConverter(data[i]);
+    }
+
+    for (int lowerBtreeCriteria = 2; lowerBtreeCriteria < 10; ++lowerBtreeCriteria) {
+        cout << "lowerBtreeCriteria: " << lowerBtreeCriteria << endl;
+        BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, lowerBtreeCriteria);
+
+        for (int i = 0; i < elementCount; ++i) {
+            tree->insert(&data[i]);
+        }
+
+        for (int removeElementIndex = 0; removeElementIndex < elementCount; ++removeElementIndex) {
+            tree->remove(keys[removeElementIndex]);
+
+            for (int i = 0; i < elementCount; ++i) {
+                if(i <= removeElementIndex) {
+                    ASSERT_EQ(tree->search(keys[i]), nullptr);
+                } else {
+                    ASSERT_EQ(*tree->search(keys[i]), data[i]);
+                }
+            }
+        }
+
+        for (int i = 0; i < elementCount; ++i) {
+            tree->insert(&data[i]);
+        }
+
+        for (int removeElementIndex = elementCount - 1; removeElementIndex >= 0; --removeElementIndex) {
+            tree->remove(keys[removeElementIndex]);
+
+            for (int i = elementCount - 1; i >= 0; --i) {
+                if(i >= removeElementIndex) {
+                    ASSERT_EQ(tree->search(keys[i]), nullptr);
+                } else {
+                    ASSERT_EQ(*tree->search(keys[i]), data[i]);
+                }
+            }
+        }
+    }
+}
