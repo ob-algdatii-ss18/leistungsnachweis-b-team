@@ -534,6 +534,76 @@ TEST(BPlusTreeM1, InsertFiveElementsRemoveOne) {
     ASSERT_EQ(*result5, data5);
 }
 
+/*
+TEST(BPlusTreeM1, InsertTwentyOneElementsRemoveAllFromFirstToLast) {
+    int elementCount = 21;
+
+    std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
+    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
+
+    string *data = new string[elementCount];
+    int *keys = new int[elementCount];
+    for (int i = 0; i < elementCount; ++i) {
+        data[i] = std::to_string(i * 2 + 2);
+        keys[i] = keyConverter(data[i]);
+    }
+
+    for (int i = 0; i < elementCount; ++i) {
+        tree->insert(&data[i]);
+    }
+
+    cout << "*tree: " << *tree << endl;
+
+    for (int removeElementIndex = 0; removeElementIndex < elementCount; ++removeElementIndex) {
+        cout << "keys[removeElementIndex]: " << keys[removeElementIndex] << endl;
+        cout << *tree << endl;
+        tree->remove(keys[removeElementIndex]);
+        for (int i = 0; i < elementCount; ++i) {
+            if (i <= removeElementIndex) {
+                ASSERT_EQ(tree->search(keys[i]), nullptr);
+            } else {
+                ASSERT_EQ(*tree->search(keys[i]), data[i]);
+            }
+        }
+    }
+}
+
+TEST(BPlusTreeM1, InsertTwentyOneElementsRemoveAllFromLastToFirst) {
+    int elementCount = 21;
+
+    std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
+    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
+
+    string *data = new string[elementCount];
+    int *keys = new int[elementCount];
+    for (int i = 0; i < elementCount; ++i) {
+        data[i] = std::to_string(i * 2 + 2);
+        keys[i] = keyConverter(data[i]);
+    }
+
+    for (int i = 0; i < elementCount; ++i) {
+        tree->insert(&data[i]);
+    }
+
+    cout << *tree << endl;
+
+    for (int removeElementIndex = elementCount-1; removeElementIndex >= 0; --removeElementIndex) {
+
+        tree->remove(keys[removeElementIndex]);
+
+        cout << *tree << endl;
+
+        for (int i = elementCount -1; i >= 0; --i) {
+            if (i >= removeElementIndex) {
+                ASSERT_EQ(tree->search(keys[i]), nullptr);
+            } else {
+                ASSERT_EQ(*tree->search(keys[i]), data[i]);
+            }
+        }
+    }
+}
+*/
+
 TEST(BPlusTreeM2, InsertSixElements) {
     int elementCount = 6;
 
