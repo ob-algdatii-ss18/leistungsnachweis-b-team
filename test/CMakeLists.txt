@@ -5,10 +5,16 @@ if (APPLE)
     add_definitions(-D__GLIBCXX__)
 endif (APPLE)
 
-add_executable(libbtree-test ${SRCS})
+add_executable(libbtree-test ${SRCS} TestBPlusTree.cpp)
 
-target_link_libraries(libbtree-test libbtree gtest)
+if (UNIX AND NOT APPLE)
+    target_link_libraries(libbtree-test libbtree gtest pthread)
+else()
+    target_link_libraries(libbtree-test libbtree gtest)
+endif()
 
 include_directories("..")
 
 install(TARGETS libbtree-test DESTINATION bin)
+
+add_test(NAME libtreetest COMMAND libbtree-test)
