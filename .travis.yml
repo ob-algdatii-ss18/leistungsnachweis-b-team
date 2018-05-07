@@ -11,3 +11,5 @@ script:
   - cd build
   - cmake --build .
   - ctest .
+  - cd test
+  - ./libbtree-test
