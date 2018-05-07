@@ -27,8 +27,8 @@ protected:
     const std::function<int(T)> valueToKeyConverter;
 public:
     Collection(std::function<int(T)> keyConverter):valueToKeyConverter(keyConverter){}
-  virtual bool insert(T* t)= 0;
-  virtual T* search(int key)= 0;
+  virtual bool insert(const T* t)= 0;
+  virtual const T* search(int key)= 0;
   virtual T* remove(int key)= 0;
 
   int startProfiling() {
