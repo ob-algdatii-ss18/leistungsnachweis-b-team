@@ -18,22 +18,23 @@ class BPlusTree : public Collection<T> {
 public:
 
     BPlusTree(std::function<int(T)> keyConverter, const int mSize) : m(mSize), Collection<T>(keyConverter) {
-        root = new Node(m, nullptr, true);
+        root = new Node(m, true);
         root->children[0] = nullptr;
+        if(m <= 1) {
+            throw std::invalid_argument("The minimum size of the tree have to be at least 2");
+        }
     }
 
     bool insert(const T *t) override {
         int newElementKey = Collection<T>::valueToKeyConverter(*t);
-        Leaf *newLeaf = new Leaf(newElementKey, t);
+        auto newLeaf = new Leaf(newElementKey, t);
 
         Node *result = root->insert(newLeaf);
 
         if (result != nullptr) {
             Node *left = root;
-            root = new Node(m, nullptr, false);
-            left->parent = root;
+            root = new Node(m, false);
             root->children[0] = left;
-            result->parent = root;
             root->children[1] = result;
             root->keys[0] = result->leftKey();
             root->filling = 1;
@@ -93,18 +94,17 @@ private:
     };
 
     struct Node : public Element {
-        Node(int m, Node *parent, bool deepest) : nodeSize(2 * m), keys(new int[2 * m + 1]), parent(parent),
+        Node(int m, bool deepest) : nodeSize(2 * m), keys(new int[2 * m + 1]),
                                                   children((Element **) malloc(sizeof(Element *) * (2 * m + 2))),
                                                   deepest(deepest) {
 
         }
 
-        Node *parent;
         int *keys; //Array
         const int nodeSize;
         int filling = 0;
         Element **children;
-        bool deepest;
+        const bool deepest;
 
         friend std::ostream &operator<<(std::ostream &os, const Node &node) {
 
@@ -325,7 +325,7 @@ private:
         Node *splitNode() {
             Node *rightNode = nullptr;
             if (filling == nodeSize) {
-                rightNode = new Node(nodeSize / 2, parent, deepest);
+                rightNode = new Node(nodeSize / 2, deepest);
                 int rightNodeIndex = 0;
                 for (int i = nodeSize / 2; i <= nodeSize; i++) {
                     rightNode->keys[rightNodeIndex] = keys[i + 1];
@@ -365,8 +365,7 @@ private:
                     }
                 }
             } else {
-                Node *newUpper = new Node(nodeSize / 2, parent, deepest);
-                left->parent = newUpper;
+                auto newUpper = new Node(nodeSize / 2, deepest);
 
                 if (left->filling < overallFilling / 2) {
                     for (int i = left->filling + 1; i <= overallFilling / 2; ++i) {
