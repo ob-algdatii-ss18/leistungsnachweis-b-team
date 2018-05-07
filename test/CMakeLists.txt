@@ -16,3 +16,5 @@ endif()
 include_directories("..")
 
 install(TARGETS libbtree-test DESTINATION bin)
+
+add_test(NAME libtreetest COMMAND libbtree-test)
