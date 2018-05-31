@@ -480,6 +480,8 @@ TEST(BPlusTree, InsertTwentyOneElementsRemoveAllFromLastToFirst) {
 
     for (int removeElementIndex = elementCount-1; removeElementIndex >= 0; --removeElementIndex) {
 
+        cout << keys[removeElementIndex] << endl;
+
         tree->remove(keys[removeElementIndex]);
 
         cout << *tree << endl;
@@ -543,4 +545,87 @@ TEST(BPlusTree, UltimateInsertAndDeleteTest) {
             }
         }
     }
+}
+
+TEST(BPlusTree, InsertTwentyOneElementsRemoveAllAndRefill) {
+    int elementCount = 21;
+
+    std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
+    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
+
+    string *data = new string[elementCount];
+    int *keys = new int[elementCount];
+    for (int i = 0; i < elementCount; ++i) {
+        data[i] = std::to_string(i * 2 + 2);
+        keys[i] = keyConverter(data[i]);
+    }
+
+    for (int i = 0; i < elementCount; ++i) {
+        tree->insert(&data[i]);
+    }
+
+    cout << *tree << endl;
+
+    for (int removeElementIndex = elementCount-1; removeElementIndex >= 0; --removeElementIndex) {
+
+        tree->remove(keys[removeElementIndex]);
+
+        cout << *tree << endl;
+
+        for (int i = elementCount -1; i >= 0; --i) {
+            if (i >= removeElementIndex) {
+                ASSERT_EQ(tree->search(keys[i]), nullptr);
+            } else {
+                ASSERT_EQ(*tree->search(keys[i]), data[i]);
+            }
+        }
+    }
+
+    for (int elementIndex = elementCount-1; elementIndex >= 0; --elementIndex) {
+
+        tree->insert(&data[elementIndex]);
+
+        cout << *tree << endl;
+    }
+
+    delete[] data;
+    delete[] keys;
+}
+
+TEST(BPlusTreeMemory, InsertTwentyOneElementsRemoveAllFromLastToFirstMemory) {
+    int elementCount = 21;
+
+    std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
+    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
+
+    string *data = new string[elementCount];
+    int *keys = new int[elementCount];
+    for (int i = 0; i < elementCount; ++i) {
+        data[i] = std::to_string(i * 2 + 2);
+        keys[i] = keyConverter(data[i]);
+    }
+
+    for (int i = 0; i < elementCount; ++i) {
+        tree->insert(&data[i]);
+    }
+
+    cout << *tree << endl;
+
+    for (int removeElementIndex = elementCount-1; removeElementIndex >= 0; --removeElementIndex) {
+
+        tree->remove(keys[removeElementIndex]);
+
+        cout << *tree << endl;
+
+        for (int i = elementCount -1; i >= 0; --i) {
+            if (i >= removeElementIndex) {
+                ASSERT_EQ(tree->search(keys[i]), nullptr);
+            } else {
+                ASSERT_EQ(*tree->search(keys[i]), data[i]);
+            }
+        }
+    }
+
+    delete[] data;
+    delete[] keys;
 }

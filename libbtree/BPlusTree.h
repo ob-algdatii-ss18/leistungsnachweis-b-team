@@ -51,7 +51,6 @@ public:
     T *remove(int key) override {
 
         Node *result = root->remove(key);
-
         if (result != nullptr) {
             root = result;
         }
@@ -83,6 +82,12 @@ private:
 
         }
 
+        ~Leaf() {
+            //std::cout << "~Leaf()" << std::endl;
+            //std::cout << "data: " << data << std::endl;
+            //delete data;
+        }
+
         const int key;
         const T *data;
 
@@ -100,6 +105,17 @@ private:
 
         }
 
+        ~Node() {
+
+            delete[] keys;
+            for(int i = 0; i < nodeSize + 2; i++) {
+                if(children[i] != nullptr) {
+                    std::cout << "DANGER" << std::endl;
+                }
+                delete children[i];
+            }
+        }
+
         int *keys; //Array
         const int nodeSize;
         int filling = 0;
@@ -107,7 +123,6 @@ private:
         const bool deepest;
 
         friend std::ostream &operator<<(std::ostream &os, const Node &node) {
-
             os << "(";
             for (int i = 0; i < node.filling; i++) {
                 if (node.deepest) {
@@ -177,6 +192,7 @@ private:
                 res = static_cast<Node *>(children[index])->insert(leaf);
 
                 if (res != nullptr) {
+
                     moveElementsRight(index);
                     keys[index] = res->leftKey();
                     children[index + 1] = res;
@@ -231,6 +247,7 @@ private:
 
                 if (deepest) {
                     if (children[index] != nullptr && static_cast<Leaf *>(children[index])->key == key) {
+                        static_cast<Leaf *>(children[index])->~Leaf();
                         if (filling == 1) {
                             if (children[0] == nullptr && index == 1) {
                                 filling = 0;
@@ -244,7 +261,6 @@ private:
                             }
                         } else {
                             moveElementsLeft(index);
-                            --filling;
                             if (filling < nodeSize / 2) {
                                 result = this;
                             }
@@ -252,7 +268,6 @@ private:
                     }
                 } else {
                     Node *res = static_cast<Node *>(children[index])->remove(key);
-
                     if (res != nullptr) {
                         Node *concated;
                         Node *left;
@@ -264,14 +279,14 @@ private:
                             concated = concatNodes(static_cast<Node *>(children[index - 1]),
                                                    static_cast<Node *>(children[index]));
                         }
-
                         if (concated == nullptr) {
                             if (filling == 1) {
                                 result = left;
                             } else {
                                 moveElementsLeft(index);
-                                --filling;
-                                children[index] = left;
+                                if(index < filling) { //only if it's not the last element
+                                    children[index] = left;
+                                }
                                 if (filling < nodeSize / 2) {
                                     result = this;
                                 }
@@ -283,7 +298,6 @@ private:
                                 keys[0] = concated->keys[0];
                             } else {
                                 moveElementsLeft(index);
-                                --filling;
                                 if (filling < nodeSize / 2) {
                                     result = concated;
                                 }
@@ -320,6 +334,9 @@ private:
                 keys[i] = keys[i + 1];
                 children[i] = children[i + 1];
             }
+            children[filling + 1] = nullptr;
+            keys[filling + 1] = 0;
+            --filling;
         }
 
         Node *splitNode() {
@@ -343,6 +360,7 @@ private:
 
         Node *concatNodes(Node *left, Node *right) {
             Node *result = nullptr;
+
             int overallFilling = left->filling + right->filling;
 
             if(left->children[0] == nullptr || right->children[0] == nullptr) {
@@ -355,6 +373,7 @@ private:
                 for (int i = 0; i <= right->filling; i++) {
                     if (right->children[i] != nullptr) {
                         left->children[index] = right->children[i];
+                        right->children[i] = nullptr;
                         if (left->deepest) {
                             left->keys[index - 1] = static_cast<Leaf *>(left->children[index])->key;
                         } else {
@@ -364,6 +383,9 @@ private:
                         ++index;
                     }
                 }
+
+                // delete of right node
+                right->~Node();
             } else {
                 auto newUpper = new Node(nodeSize / 2, deepest);
 
@@ -377,7 +399,6 @@ private:
                             left->keys[i - 1] = static_cast<Node *>(left->children[i])->leftKey();
                         }
                         ++left->filling;
-                        --right->filling;
                     }
                 } else {
                     int leftFormerFilling = left->filling;
@@ -388,6 +409,7 @@ private:
                             right->moveElementsRight(0);
                         }
                         right->children[0] = left->children[i];
+                        left->children[i] = nullptr;
                         --left->filling;
                         ++right->filling;
 
