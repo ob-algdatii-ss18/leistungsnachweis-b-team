@@ -72,6 +72,13 @@ public:
         return os;
     }
 
+    void generateDotCode() {
+        std::cout << "digraph BTREE {" << std:: endl;
+        std::cout << "node [shape = record,height=.1];" << std:: endl;
+        root->generateDotCode();
+        std::cout << "}" << std:: endl;
+    }
+
 
 private:
     struct Element {
@@ -142,6 +149,26 @@ private:
             os << ")";
 
             return os;
+        }
+
+        void generateDotCode() {
+            std::cout << "\"" << this << "\"[label = \"";
+            for (int i = 0; i < filling; i++) {
+                std::cout << "<f" << i << "> |" << keys[i] << "|";
+            }
+            std::cout << "<f" << filling << ">\"];" << std::endl;
+
+            for (int i = 0; i <= filling; i++) {
+                if (deepest) {
+                    std::cout << "\"" << children[i] << "\"[label = \"" << static_cast<Leaf *>(children[i])->key << "\", shape=ellipse];" << std::endl;
+                } else {
+                    static_cast<Node *>(children[i])->generateDotCode();
+                }
+                std::cout << "\"" << this << "\":f" << i << " -> \"" << children[i] << "\";" << std::endl;
+
+            }
+
+            //<f0> |10|<f1> |20|<f2> |30|<f3>"]; << std::endl;
         }
 
         int leftKey() {

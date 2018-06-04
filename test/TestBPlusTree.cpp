@@ -325,6 +325,7 @@ TEST(BPlusTree, InsertTwentyOneElements) {
     }
 
     cout << *tree << endl;
+    tree->generateDotCode();
 
     for (int i = 0; i < elementCount; ++i) {
         ASSERT_EQ(*tree->search(keys[i]), data[i]);

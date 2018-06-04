@@ -22,7 +22,7 @@ template<class T>
 class Collection {
 
 private:
-    ProfilingResults* profile = nullptr;
+    ProfilingResults* profile = new ProfilingResults();
 protected:
     const std::function<int(T)> valueToKeyConverter;
 public:
