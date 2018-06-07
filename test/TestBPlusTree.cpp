@@ -25,6 +25,8 @@ TEST(BPlusTree, SearchNotExistingElemnt) {
     BPlusTree<string> * tree = new BPlusTree<string>(keyConverter, 2);
     tree->insert(&data);
 
+    tree->generateDotCode();
+
     const string* result1 = tree->search(key);
     const string* result2 = tree->search(1);
     const string* result3 = tree->search(8);

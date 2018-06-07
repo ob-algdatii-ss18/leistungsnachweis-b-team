@@ -160,7 +160,12 @@ private:
 
             for (int i = 0; i <= filling; i++) {
                 if (deepest) {
-                    std::cout << "\"" << children[i] << "\"[label = \"" << static_cast<Leaf *>(children[i])->key << "\", shape=ellipse];" << std::endl;
+                    if(children[i] == nullptr) {
+                        std::cout << "\"" << children[i] << "\"[label = \"0\", shape=ellipse];" << std::endl;
+                    } else {
+                        std::cout << "\"" << children[i] << "\"[label = \"" << static_cast<Leaf *>(children[i])->key
+                                  << "\", shape=ellipse];" << std::endl;
+                    }
                 } else {
                     static_cast<Node *>(children[i])->generateDotCode();
                 }
