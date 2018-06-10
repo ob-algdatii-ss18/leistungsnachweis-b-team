@@ -10,11 +10,15 @@
 
 #include "Collection.h"
 #include <iostream>
+#include <chrono>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 template<class T>
 class BPlusTree : public Collection<T> {
-
-
+private:
+    int fileCount = 0;
 public:
 
     BPlusTree(std::function<int(T)> keyConverter, const int mSize) : m(mSize), Collection<T>(keyConverter) {
@@ -85,11 +89,24 @@ public:
         return os;
     }
 
-    void generateDotCode() {
-        std::cout << "digraph BTREE {" << std:: endl;
-        std::cout << "node [shape = record,height=.1];" << std:: endl;
-        root->generateDotCode();
-        std::cout << "}" << std:: endl;
+    std::string generateDotCode() {
+        std::stringstream stream;
+        stream << "digraph BTREE {" << std::endl;
+        stream << "node [shape = record,height=.1];" << std::endl;
+        stream << root->generateDotCode();
+        stream << "}" << std:: endl;
+        return stream.str();
+    }
+
+    void generateDotFile() {
+        std::stringstream filestream;
+        filestream << "/tmp/example_" << fileCount++ << ".dot";
+        std::string filename = filestream.str();
+
+        std::ofstream dotfile;
+        dotfile.open (filename);
+        dotfile << this->generateDotCode() << std::endl;
+        dotfile.close();
     }
 
 
@@ -164,29 +181,30 @@ private:
             return os;
         }
 
-        void generateDotCode() {
-            std::cout << "\"" << this << "\"[label = \"";
+        std::string generateDotCode() {
+            std::stringstream stream;
+            stream << "\"" << this << "\"[label = \"";
             for (int i = 0; i < filling; i++) {
-                std::cout << "<f" << i << "> |" << keys[i] << "|";
+                stream << "<f" << i << "> |" << keys[i] << "|";
             }
-            std::cout << "<f" << filling << ">\"];" << std::endl;
+            stream << "<f" << filling << ">\"];" << std::endl;
 
             for (int i = 0; i <= filling; i++) {
                 if (deepest) {
                     if(children[i] == nullptr) {
-                        std::cout << "\"" << children[i] << "\"[label = \"0\", shape=ellipse];" << std::endl;
+                        stream << "\"" << children[i] << "\"[label = \"0\", shape=ellipse];" << std::endl;
                     } else {
-                        std::cout << "\"" << children[i] << "\"[label = \"" << static_cast<Leaf *>(children[i])->key
+                        stream << "\"" << children[i] << "\"[label = \"" << static_cast<Leaf *>(children[i])->key
                                   << "\", shape=ellipse];" << std::endl;
                     }
                 } else {
-                    static_cast<Node *>(children[i])->generateDotCode();
+                    stream << static_cast<Node *>(children[i])->generateDotCode();
                 }
-                std::cout << "\"" << this << "\":f" << i << " -> \"" << children[i] << "\";" << std::endl;
+                stream << "\"" << this << "\":f" << i << " -> \"" << children[i] << "\";" << std::endl;
 
             }
 
-            //<f0> |10|<f1> |20|<f2> |30|<f3>"]; << std::endl;
+            return stream.str();
         }
 
         int leftKey() {
