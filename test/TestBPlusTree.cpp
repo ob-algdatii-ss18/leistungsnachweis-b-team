@@ -21,15 +21,24 @@ TEST(BPlusTree, SearchNotExistingElemnt) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
     const string data = "test";
     int key = keyConverter(data);
+    ProfilingResults *profilingResults = new ProfilingResults();
 
     BPlusTree<string> * tree = new BPlusTree<string>(keyConverter, 2);
-    tree->insert(&data);
+    tree->insert(&data, profilingResults);
+    ASSERT_EQ(profilingResults->insertFileAccess, 1);
+    ASSERT_EQ(profilingResults->insertComparisons, 0);
 
     tree->generateDotCode();
 
-    const string* result1 = tree->search(key);
-    const string* result2 = tree->search(1);
-    const string* result3 = tree->search(8);
+    const string* result1 = tree->search(key, profilingResults);
+    ASSERT_EQ(profilingResults->searchFileAccess, 1);
+    ASSERT_EQ(profilingResults->searchComparisons, 2);
+    const string* result2 = tree->search(1, profilingResults);
+    ASSERT_EQ(profilingResults->searchFileAccess, 2);
+    ASSERT_EQ(profilingResults->searchComparisons, 4);
+    const string* result3 = tree->search(8, profilingResults);
+    ASSERT_EQ(profilingResults->searchFileAccess, 3);
+    ASSERT_EQ(profilingResults->searchComparisons, 6);
 
     ASSERT_EQ(*result1, data);
     ASSERT_EQ(result2, nullptr);
@@ -371,6 +380,7 @@ TEST(BPlusTree, InsertSevenElementsRemoveFirst) {
 
     std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
     BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
+    ProfilingResults *profilingResults = new ProfilingResults();
 
     string *data = new string[elementCount];
     int *keys = new int[elementCount];
@@ -383,17 +393,23 @@ TEST(BPlusTree, InsertSevenElementsRemoveFirst) {
         tree->insert(&data[i]);
     }
 
-    tree->remove(keys[removeElementIndex]);
+    tree->remove(keys[removeElementIndex], profilingResults);
+    cout << *tree << endl;
+    ASSERT_EQ(profilingResults->removeFileAccess, 2);
+    ASSERT_EQ(profilingResults->removeComparisons, 3);
 
     cout << *tree << endl;
 
     for (int i = 0; i < elementCount; ++i) {
         if(i == removeElementIndex) {
-            ASSERT_EQ(tree->search(keys[i]), nullptr);
+            ASSERT_EQ(tree->search(keys[i], profilingResults), nullptr);
         } else {
-            ASSERT_EQ(*tree->search(keys[i]), data[i]);
+            ASSERT_EQ(*tree->search(keys[i], profilingResults), data[i]);
         }
     }
+
+    ASSERT_EQ(profilingResults->searchFileAccess, 14);
+    ASSERT_EQ(profilingResults->searchComparisons, 25);
 }
 
 TEST(BPlusTree, InsertTwentyOneElementsRemoveFirst) {
@@ -402,6 +418,7 @@ TEST(BPlusTree, InsertTwentyOneElementsRemoveFirst) {
 
     std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
     BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
+    ProfilingResults *profilingResults = new ProfilingResults();
 
     string *data = new string[elementCount];
     int *keys = new int[elementCount];
@@ -411,20 +428,24 @@ TEST(BPlusTree, InsertTwentyOneElementsRemoveFirst) {
     }
 
     for (int i = 0; i < elementCount; ++i) {
-        tree->insert(&data[i]);
+        tree->insert(&data[i], profilingResults);
     }
 
-    tree->remove(keys[removeElementIndex]);
+    tree->remove(keys[removeElementIndex], profilingResults);
+    ASSERT_EQ(profilingResults->removeFileAccess, 3);
+    ASSERT_EQ(profilingResults->removeComparisons, 4);
 
     cout << *tree << endl;
 
     for (int i = 0; i < elementCount; ++i) {
         if(i == removeElementIndex) {
-            ASSERT_EQ(tree->search(keys[i]), nullptr);
+            ASSERT_EQ(tree->search(keys[i], profilingResults), nullptr);
         } else {
-            ASSERT_EQ(*tree->search(keys[i]), data[i]);
+            ASSERT_EQ(*tree->search(keys[i], profilingResults), data[i]);
         }
     }
+    ASSERT_EQ(profilingResults->searchFileAccess, 63);
+    ASSERT_EQ(profilingResults->searchComparisons, 115);
 }
 
 TEST(BPlusTree, InsertTwentyOneElementsRemoveAllFromFirstToLast) {
