@@ -24,17 +24,35 @@ struct ProfilingResults {
   }
 };
 
-/// Template Klasse für alle Collections die verglichen werden sollen.
+/// Template Klasse für alle Listen die verglichen werden sollen.
 /** Diese Klasse enthält die Methodenvorgaben und Mechanismen für die Vergleichsmessung.
- * Dazu kann beim Einfügen, Suchen und Entfernen die Anzahl der Vergleiche und Dateizugriff erfasst werden. */
+ * Dazu kann beim Einfügen, Suchen und Entfernen die Anzahl der Vergleichsoperationen und Dateizugriff erfasst werden. */
 template<class T>
 class Collection {
 
 protected:
+    /**
+     * Lambdaausdruck der aus dem Objekt einen int-Key generiert.
+     */
     const std::function<int(T)> valueToKeyConverter;
 public:
+    /**
+     * C.
+     * @param keyConverter = Funktion die aus der Value den Key berechnet.
+     */
     Collection(std::function<int(T)> keyConverter):valueToKeyConverter(keyConverter){}
+    /**
+     * Einfügen ohne Messung.
+     * @param t Pointer auf das Objekt das eingefügt werden soll.
+     * @return true.
+     */
   virtual bool insert(const T* t)= 0;
+  /**
+   * Einfügen mit Messung.
+   * @param t Pointer auf das Objekt das eingefügt werden soll.
+   * @param p Profile in das die Messergebnisse geschrieben werden
+   * @return true.
+   */
   virtual bool insert(const T* t, ProfilingResults* p)= 0;
   virtual const T* search(int key)= 0;
   virtual const T* search(int key, ProfilingResults* p)= 0;
