@@ -28,8 +28,6 @@ TEST(BPlusTree, SearchNotExistingElemnt) {
     ASSERT_EQ(profilingResults->insertFileAccess, 1);
     ASSERT_EQ(profilingResults->insertComparisons, 0);
 
-    tree->generateDotCode();
-
     const string* result1 = tree->search(key, profilingResults);
     ASSERT_EQ(profilingResults->searchFileAccess, 1);
     ASSERT_EQ(profilingResults->searchComparisons, 2);
@@ -336,7 +334,6 @@ TEST(BPlusTree, InsertTwentyOneElements) {
     }
 
     cout << *tree << endl;
-    tree->generateDotCode();
 
     for (int i = 0; i < elementCount; ++i) {
         ASSERT_EQ(*tree->search(keys[i]), data[i]);
