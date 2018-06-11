@@ -24,6 +24,9 @@ struct ProfilingResults {
   }
 };
 
+/// Template Klasse für alle Collections die verglichen werden sollen.
+/** Diese Klasse enthält die Methodenvorgaben und Mechanismen für die Vergleichsmessung.
+ * Dazu kann beim Einfügen, Suchen und Entfernen die Anzahl der Vergleiche und Dateizugriff erfasst werden. */
 template<class T>
 class Collection {
 
