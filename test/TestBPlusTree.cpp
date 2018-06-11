@@ -8,7 +8,6 @@
 
 using namespace std;
 
-
 TEST(BPlusTree, SearchInAEmptyTree) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
 
@@ -654,8 +653,6 @@ TEST(BPlusTreeMemory, InsertTwentyOneElementsRemoveAllFromLastToFirstMemory) {
     delete[] keys;
 }
 
-
-
 TEST(SortList, SearchInAEmptyTree) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
 
@@ -665,6 +662,7 @@ TEST(SortList, SearchInAEmptyTree) {
     ASSERT_EQ(result, nullptr);
 }
 
+/*
 TEST(SortList, InsertAndSearchOneElement) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
     const string data = "test";
@@ -1200,3 +1198,5 @@ TEST(SortListMemory, InsertTwentyOneElementsRemoveAllFromLastToFirstMemory) {
     delete[] data;
     delete[] keys;
 }
+
+ */
