@@ -814,7 +814,7 @@ TEST(SortList, InsertTwoElementsRemoveTheLowerKeyElement) {
     ASSERT_EQ(result1, nullptr);
     ASSERT_EQ(*result2, data2);
 }
-
+/*
 TEST(SortList, InsertTwoElementsRemoveTheUpperKeyElement) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "tes";
@@ -835,7 +835,7 @@ TEST(SortList, InsertTwoElementsRemoveTheUpperKeyElement) {
     ASSERT_EQ(*result1, data1);
     ASSERT_EQ(result2, nullptr);
 }
-/* //before
+ //before
 TEST(SortList, InsertThreeElementsRemoveLeft) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
