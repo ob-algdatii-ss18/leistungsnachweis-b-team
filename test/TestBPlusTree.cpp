@@ -778,49 +778,6 @@ TEST(SortList, RemoveNotExisingElement) {
 
  */
 
-
-/* //failed
-TEST(SortList, InsertAndRemoveOneElement) {
-    std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
-    const string data = "test";
-    int key = keyConverter(data);
-
-    SortList<string> * tree = new SortList<string>(keyConverter, 2);
-    tree->insert(&data);
-    tree->remove(key);
-
-    const string* result = tree->search(key);
-
-    cout << *tree << endl;
-
-    ASSERT_EQ(result, nullptr);
-}
- *
- */
-
-/*failed
-TEST(SortList, InsertTwoElementsRemoveTheLowerKeyElement) {
-    std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
-    const string data1 = "tes";
-    const string data2 = "test";
-    int key1 = keyConverter(data1);
-    int key2 = keyConverter(data2);
-
-    SortList<string> *tree = new SortList<string>(keyConverter, 2);
-    tree->insert(&data1);
-    tree->insert(&data2);
-    tree->remove(key1);
-
-    const string *result1 = tree->search(key1);
-    const string *result2 = tree->search(key2);
-
-    cout << *tree << endl;
-
-    ASSERT_EQ(result1, nullptr);
-    ASSERT_EQ(*result2, data2);
-}
- */
-
 //worked
 TEST(SortList, InsertTwoElementsRemoveTheUpperKeyElement) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
@@ -842,38 +799,62 @@ TEST(SortList, InsertTwoElementsRemoveTheUpperKeyElement) {
     ASSERT_EQ(*result1, data1);
     ASSERT_EQ(result2, nullptr);
 }
-//failed
-/*
-TEST(SortList, InsertThreeElementsRemoveLeft) {
-    std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
-    const string data1 = "test";
-    const string data2 = "tes";
-    const string data3 = "test5";
-    int key1 = keyConverter(data1);
-    int key2 = keyConverter(data2);
-    int key3 = keyConverter(data3);
 
+//verified
+/* verified
+ *
+ *
+ *
+ *
+ *
+
+TEST(SortList, InsertSixElements) {
+    int elementCount = 6;
+
+    std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
     SortList<string> *tree = new SortList<string>(keyConverter, 2);
-    tree->insert(&data1);
-    tree->insert(&data2);
-    tree->insert(&data3);
 
-    tree->remove(key2);
+    string *data = new string[elementCount];
+    int *keys = new int[elementCount];
+    for (int i = 0; i < elementCount; ++i) {
+        data[i] = std::to_string(i * 2 + 2);
+        keys[i] = keyConverter(data[i]);
+    }
 
-    const string *result1 = tree->search(key1);
-    const string *result2 = tree->search(key2);
-    const string *result3 = tree->search(key3);;
+    for (int i = 0; i < elementCount; ++i) {
+        tree->insert(&data[i]);
+    }
 
     cout << *tree << endl;
 
-    ASSERT_EQ(*result1, data1);
-    ASSERT_EQ(result2, nullptr);
-    ASSERT_EQ(*result3, data3);
+    for (int i = 0; i < elementCount; ++i) {
+        ASSERT_EQ(*tree->search(keys[i]), data[i]);
+    }
 }
-*/
 
+TEST(SortList, InsertTwentyOneElements) {
+    int elementCount = 21;
 
-/* verified
+    std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
+    SortList<string> *tree = new SortList<string>(keyConverter, 2);
+
+    string *data = new string[elementCount];
+    int *keys = new int[elementCount];
+    for (int i = 0; i < elementCount; ++i) {
+        data[i] = std::to_string(i * 2 + 2);
+        keys[i] = keyConverter(data[i]);
+    }
+
+    for (int i = 0; i < elementCount; ++i) {
+        tree->insert(&data[i]);
+    }
+
+    cout << *tree << endl;
+
+    for (int i = 0; i < elementCount; ++i) {
+        ASSERT_EQ(*tree->search(keys[i]), data[i]);
+    }
+}
 TEST(SortList, InsertThreeElementsRemoveMiddle) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
@@ -929,57 +910,85 @@ TEST(SortList, InsertThreeElementsRemoveRight) {
 }
 */
 
+
+/* //failed
+TEST(SortList, InsertAndRemoveOneElement) {
+    std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
+    const string data = "test";
+    int key = keyConverter(data);
+
+    SortList<string> * tree = new SortList<string>(keyConverter, 2);
+    tree->insert(&data);
+    tree->remove(key);
+
+    const string* result = tree->search(key);
+
+    cout << *tree << endl;
+
+    ASSERT_EQ(result, nullptr);
+}
+ *
+ */
+
+/*failed
+TEST(SortList, InsertTwoElementsRemoveTheLowerKeyElement) {
+    std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
+    const string data1 = "tes";
+    const string data2 = "test";
+    int key1 = keyConverter(data1);
+    int key2 = keyConverter(data2);
+
+    SortList<string> *tree = new SortList<string>(keyConverter, 2);
+    tree->insert(&data1);
+    tree->insert(&data2);
+    tree->remove(key1);
+
+    const string *result1 = tree->search(key1);
+    const string *result2 = tree->search(key2);
+
+    cout << *tree << endl;
+
+    ASSERT_EQ(result1, nullptr);
+    ASSERT_EQ(*result2, data2);
+}
+ */
+
+
+//failed
+/*
+TEST(SortList, InsertThreeElementsRemoveLeft) {
+    std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
+    const string data1 = "test";
+    const string data2 = "tes";
+    const string data3 = "test5";
+    int key1 = keyConverter(data1);
+    int key2 = keyConverter(data2);
+    int key3 = keyConverter(data3);
+
+    SortList<string> *tree = new SortList<string>(keyConverter, 2);
+    tree->insert(&data1);
+    tree->insert(&data2);
+    tree->insert(&data3);
+
+    tree->remove(key2);
+
+    const string *result1 = tree->search(key1);
+    const string *result2 = tree->search(key2);
+    const string *result3 = tree->search(key3);;
+
+    cout << *tree << endl;
+
+    ASSERT_EQ(*result1, data1);
+    ASSERT_EQ(result2, nullptr);
+    ASSERT_EQ(*result3, data3);
+}
+*/
+
+
 //fail after here
 
 
-TEST(SortList, InsertSixElements) {
-    int elementCount = 6;
-
-    std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
-    SortList<string> *tree = new SortList<string>(keyConverter, 2);
-
-    string *data = new string[elementCount];
-    int *keys = new int[elementCount];
-    for (int i = 0; i < elementCount; ++i) {
-        data[i] = std::to_string(i * 2 + 2);
-        keys[i] = keyConverter(data[i]);
-    }
-
-    for (int i = 0; i < elementCount; ++i) {
-        tree->insert(&data[i]);
-    }
-
-    cout << *tree << endl;
-
-    for (int i = 0; i < elementCount; ++i) {
-        ASSERT_EQ(*tree->search(keys[i]), data[i]);
-    }
-}
-
-TEST(SortList, InsertTwentyOneElements) {
-    int elementCount = 21;
-
-    std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
-    SortList<string> *tree = new SortList<string>(keyConverter, 2);
-
-    string *data = new string[elementCount];
-    int *keys = new int[elementCount];
-    for (int i = 0; i < elementCount; ++i) {
-        data[i] = std::to_string(i * 2 + 2);
-        keys[i] = keyConverter(data[i]);
-    }
-
-    for (int i = 0; i < elementCount; ++i) {
-        tree->insert(&data[i]);
-    }
-
-    cout << *tree << endl;
-
-    for (int i = 0; i < elementCount; ++i) {
-        ASSERT_EQ(*tree->search(keys[i]), data[i]);
-    }
-}
-/*
+/* failed
 TEST(SortList, InsertSixElementsRemoveFirst) {
     int elementCount = 6;
     int removeElementIndex = 0;
@@ -1012,7 +1021,10 @@ TEST(SortList, InsertSixElementsRemoveFirst) {
         }
     }
 }
-//fail before here
+*/
+
+
+
 TEST(SortList, InsertTwentyOneElementsRemoveAllFromFirstToLast) {
     int elementCount = 21;
 
@@ -1218,4 +1230,4 @@ TEST(SortListMemory, InsertTwentyOneElementsRemoveAllFromLastToFirstMemory) {
     delete[] data;
     delete[] keys;
 }
-*/
+
