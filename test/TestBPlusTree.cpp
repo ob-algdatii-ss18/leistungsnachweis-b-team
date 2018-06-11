@@ -872,6 +872,8 @@ TEST(SortList, InsertThreeElementsRemoveLeft) {
 }
 */
 
+
+/* verified
 TEST(SortList, InsertThreeElementsRemoveMiddle) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
@@ -925,7 +927,11 @@ TEST(SortList, InsertThreeElementsRemoveRight) {
     ASSERT_EQ(*result2, data2);
     ASSERT_EQ(result3, nullptr);
 }
-/*
+*/
+
+//fail after here
+
+
 TEST(SortList, InsertSixElements) {
     int elementCount = 6;
 
@@ -973,7 +979,7 @@ TEST(SortList, InsertTwentyOneElements) {
         ASSERT_EQ(*tree->search(keys[i]), data[i]);
     }
 }
-
+/*
 TEST(SortList, InsertSixElementsRemoveFirst) {
     int elementCount = 6;
     int removeElementIndex = 0;
