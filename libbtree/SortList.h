@@ -41,8 +41,14 @@ public:
             root = elem;
             return true;
         }
+        if (root->key > newElementKey){
+            p->insertComparisons++;
+            elem->next = root;
+            root = elem;
+            return true;
+        }
         Element* runner = root;
-        while (runner->next != nullptr && runner->next->key < root->key){
+        while (runner->next != nullptr && runner->next->key < newElementKey){
             p->insertComparisons++;
             //Iterate
             runner = runner->next;
@@ -98,7 +104,7 @@ public:
         if (root== nullptr){
             return false;
         }
-        else if (root->key = key){
+        else if (root->key == key){
             p->removeComparisons++;
             root = root->next;
         }

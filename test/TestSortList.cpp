@@ -24,6 +24,7 @@ TEST(SortListM1, InsertSearchRemoveOne) {
     bool removed = list->remove(4);
     ASSERT_TRUE(removed);
 }
+
 TEST(SortListM1, InsertSearchRemoveTwenty) {
     int elementCount = 2;
 
