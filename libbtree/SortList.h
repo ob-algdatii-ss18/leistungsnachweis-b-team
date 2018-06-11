@@ -29,20 +29,26 @@ public:
         root = nullptr;
     }
 
-    bool insert(const T *t) override{
+    bool insert(const T *t) override {
         ProfilingResults *profilingResults = new ProfilingResults();
         return insert (t, profilingResults);
     }
 
-    bool insert(const T* t, ProfilingResults* p)override{
+    bool insert(const T* t, ProfilingResults* p) override {
         int newElementKey = Collection<T>::valueToKeyConverter(*t);
         Element *elem = new Element(newElementKey,t);
         if (nullptr == root){
             root = elem;
             return true;
         }
+        if (root->key > newElementKey){
+            p->insertComparisons++;
+            elem->next = root;
+            root = elem;
+            return true;
+        }
         Element* runner = root;
-        while (runner->next != nullptr && runner->next->key < root->key){
+        while (runner->next != nullptr && runner->next->key < newElementKey){
             p->insertComparisons++;
             //Iterate
             runner = runner->next;
@@ -56,7 +62,7 @@ public:
         return true;
     }
 
-    const T *search(int key){
+    const T *search(int key) override {
         ProfilingResults *profilingResults = new ProfilingResults();
         return search (key, profilingResults);
 
@@ -88,7 +94,7 @@ public:
         }
     }
 
-    bool remove(int key){
+    bool remove(int key) override {
         ProfilingResults *profilingResults = new ProfilingResults();
         return remove (key, profilingResults);
 
@@ -98,7 +104,7 @@ public:
         if (root== nullptr){
             return false;
         }
-        else if (root->key = key){
+        else if (root->key == key){
             p->removeComparisons++;
             root = root->next;
         }

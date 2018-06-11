@@ -5,7 +5,7 @@ if (APPLE)
     add_definitions(-D__GLIBCXX__)
 endif (APPLE)
 
-add_executable(libbtree-test ${SRCS} TestBPlusTree.cpp TestSortList.cpp CollectionTest.cpp)
+add_executable(libbtree-test ${SRCS} TestBPlusTree.cpp )
 
 if (UNIX AND NOT APPLE)
     target_link_libraries(libbtree-test libbtree gtest pthread)
