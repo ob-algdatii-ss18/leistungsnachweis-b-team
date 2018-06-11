@@ -719,7 +719,7 @@ TEST(SortList, InsertAndSearchTwoElementsLowerKeySecond) {
     ASSERT_EQ(*result1, data1);
     ASSERT_EQ(*result2, data2);
 }
-
+/*
 TEST(SortList, InsertAndSearchThreeElements) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
@@ -790,7 +790,8 @@ TEST(SortList, InsertAndRemoveOneElement) {
 
     ASSERT_EQ(result, nullptr);
 }
-/*
+//problem before here
+
 TEST(SortList, InsertTwoElementsRemoveTheLowerKeyElement) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "tes";
