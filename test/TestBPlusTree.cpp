@@ -1096,7 +1096,7 @@ TEST(SortList, InsertTwentyOneElementsRemoveAllFromLastToFirst) {
         }
     }
 }
-
+/*
 TEST(SortList, UltimateInsertAndDeleteTest) {
     int elementCount = 1000;
 
@@ -1230,4 +1230,4 @@ TEST(SortListMemory, InsertTwentyOneElementsRemoveAllFromLastToFirstMemory) {
     delete[] data;
     delete[] keys;
 }
-
+*/
