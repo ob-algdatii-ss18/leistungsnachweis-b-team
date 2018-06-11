@@ -7,7 +7,8 @@
 #include "BPlusTree.h"
 
 using namespace std;
-/*
+
+
 TEST(BPlusTree, SearchInAEmptyTree) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
 
@@ -653,10 +654,10 @@ TEST(BPlusTreeMemory, InsertTwentyOneElementsRemoveAllFromLastToFirstMemory) {
     delete[] keys;
 }
 
-*/
 
 
-/* validated
+
+// validated
 TEST(SortList, SearchInAEmptyTree) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
 
@@ -776,8 +777,6 @@ TEST(SortList, RemoveNotExisingElement) {
     ASSERT_EQ(*result2, data);
 }
 
- */
-
 //worked
 TEST(SortList, InsertTwoElementsRemoveTheUpperKeyElement) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
@@ -801,12 +800,6 @@ TEST(SortList, InsertTwoElementsRemoveTheUpperKeyElement) {
 }
 
 //verified
-/* verified
- *
- *
- *
- *
- *
 
 TEST(SortList, InsertSixElements) {
     int elementCount = 6;
@@ -855,6 +848,7 @@ TEST(SortList, InsertTwentyOneElements) {
         ASSERT_EQ(*tree->search(keys[i]), data[i]);
     }
 }
+
 TEST(SortList, InsertThreeElementsRemoveMiddle) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
@@ -908,7 +902,6 @@ TEST(SortList, InsertThreeElementsRemoveRight) {
     ASSERT_EQ(*result2, data2);
     ASSERT_EQ(result3, nullptr);
 }
-*/
 
 //failed
 /* //failed
@@ -1180,7 +1173,7 @@ TEST(SortList, InsertTwentyOneElementsRemoveAllAndRefill) {
     delete[] data;
     delete[] keys;
 }
-*/
+
 TEST(SortListMemory, InsertTwentyOneElementsRemoveAllFromLastToFirstMemory) {
     int elementCount = 21;
 
@@ -1218,3 +1211,4 @@ TEST(SortListMemory, InsertTwentyOneElementsRemoveAllFromLastToFirstMemory) {
     delete[] data;
     delete[] keys;
 }
+ */
