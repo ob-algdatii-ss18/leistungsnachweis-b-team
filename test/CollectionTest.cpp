@@ -1,28 +1,32 @@
 //
+// Created by offline on 04.06.2018.
+//
+
+//
 // Created by ms1511 on 01.05.18.
 //
 
 #include "gtest.h"
-#include "BPlusTree.h"
+#include "SortList.h"
 
 using namespace std;
 
 
-TEST(BPlusTreeM1, SearchInAEmptyTree) {
+TEST(CollectionM1, SearchInAEmptyTree) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
 
-    BPlusTree<string> * tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> * tree = new SortList<string>(keyConverter, 1);
     const string* result = tree->search(5);
 
     ASSERT_EQ(result, nullptr);
 }
 
-TEST(BPlusTreeM1, SearchNotExistingElemnt) {
+TEST(CollectionM1, SearchNotExistingElemnt) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
     const string data = "test";
     int key = keyConverter(data);
 
-    BPlusTree<string> * tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> * tree = new SortList<string>(keyConverter, 1);
     tree->insert(&data);
 
     const string* result1 = tree->search(key);
@@ -34,12 +38,12 @@ TEST(BPlusTreeM1, SearchNotExistingElemnt) {
     ASSERT_EQ(result3, nullptr);
 }
 
-TEST(BPlusTreeM1, InsertAndSearchOneElement) {
+TEST(CollectionM1, InsertAndSearchOneElement) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
     const string data = "test";
     int key = keyConverter(data);
 
-    BPlusTree<string> * tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> * tree = new SortList<string>(keyConverter, 1);
     tree->insert(&data);
 
     const string* result = tree->search(key);
@@ -49,14 +53,14 @@ TEST(BPlusTreeM1, InsertAndSearchOneElement) {
     ASSERT_EQ(*result, data);
 }
 
-TEST(BPlusTreeM1, InsertAndSearchTwoElementsLowerKeyFirst) {
+TEST(CollectionM1, InsertAndSearchTwoElementsLowerKeyFirst) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "tes";
     const string data2 = "test";
     int key1 = keyConverter(data1);
     int key2 = keyConverter(data2);
 
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> *tree = new SortList<string>(keyConverter, 1);
     tree->insert(&data1);
     tree->insert(&data2);
 
@@ -69,14 +73,14 @@ TEST(BPlusTreeM1, InsertAndSearchTwoElementsLowerKeyFirst) {
     ASSERT_EQ(*result2, data2);
 }
 
-TEST(BPlusTreeM1, InsertAndSearchTwoElementsLowerKeySecond) {
+TEST(CollectionM1, InsertAndSearchTwoElementsLowerKeySecond) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
     int key1 = keyConverter(data1);
     int key2 = keyConverter(data2);
 
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> *tree = new SortList<string>(keyConverter, 1);
     tree->insert(&data1);
     tree->insert(&data2);
 
@@ -89,7 +93,7 @@ TEST(BPlusTreeM1, InsertAndSearchTwoElementsLowerKeySecond) {
     ASSERT_EQ(*result2, data2);
 }
 
-TEST(BPlusTreeM1, InsertAndSearchThreeElements) {
+TEST(CollectionM1, InsertAndSearchThreeElements) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -98,7 +102,7 @@ TEST(BPlusTreeM1, InsertAndSearchThreeElements) {
     int key2 = keyConverter(data2);
     int key3 = keyConverter(data3);
 
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> *tree = new SortList<string>(keyConverter, 1);
     tree->insert(&data1);
     tree->insert(&data2);
     tree->insert(&data3);
@@ -114,7 +118,7 @@ TEST(BPlusTreeM1, InsertAndSearchThreeElements) {
     ASSERT_EQ(*result3, data3);
 }
 
-TEST(BPlusTreeM1, InsertAndSearchFourElements) {
+TEST(CollectionM1, InsertAndSearchFourElements) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -125,7 +129,7 @@ TEST(BPlusTreeM1, InsertAndSearchFourElements) {
     int key3 = keyConverter(data3);
     int key4 = keyConverter(data4);
 
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> *tree = new SortList<string>(keyConverter, 1);
     tree->insert(&data1);
     tree->insert(&data2);
     tree->insert(&data3);
@@ -144,7 +148,7 @@ TEST(BPlusTreeM1, InsertAndSearchFourElements) {
     ASSERT_EQ(*result4, data4);
 }
 
-TEST(BPlusTreeM1, InsertAndSearchFiveElements) {
+TEST(CollectionM1, InsertAndSearchFiveElements) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -157,7 +161,7 @@ TEST(BPlusTreeM1, InsertAndSearchFiveElements) {
     int key4 = keyConverter(data4);
     int key5 = keyConverter(data5);
 
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> *tree = new SortList<string>(keyConverter, 1);
     tree->insert(&data1);
     tree->insert(&data2);
     tree->insert(&data3);
@@ -179,7 +183,7 @@ TEST(BPlusTreeM1, InsertAndSearchFiveElements) {
     ASSERT_EQ(*result5, data5);
 }
 
-TEST(BPlusTreeM1, InsertAndSearchNineElements) {
+TEST(CollectionM1, InsertAndSearchNineElements) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -201,7 +205,7 @@ TEST(BPlusTreeM1, InsertAndSearchNineElements) {
     int key8 = keyConverter(data8);
     int key9 = keyConverter(data9);
 
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> *tree = new SortList<string>(keyConverter, 1);
     tree->insert(&data1);
     tree->insert(&data2);
     tree->insert(&data3);
@@ -235,7 +239,7 @@ TEST(BPlusTreeM1, InsertAndSearchNineElements) {
     ASSERT_EQ(*result9, data9);
 }
 
-TEST(BPlusTreeM1, InsertAndSearchTenElements) {
+TEST(CollectionM1, InsertAndSearchTenElements) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -259,7 +263,7 @@ TEST(BPlusTreeM1, InsertAndSearchTenElements) {
     int key9 = keyConverter(data9);
     int key10 = keyConverter(data10);
 
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> *tree = new SortList<string>(keyConverter, 1);
     tree->insert(&data1);
     tree->insert(&data2);
     tree->insert(&data3);
@@ -296,10 +300,10 @@ TEST(BPlusTreeM1, InsertAndSearchTenElements) {
     ASSERT_EQ(*result10, data10);
 }
 
-TEST(BPlusTreeM1, RemoveFromEmptyTree) {
+TEST(CollectionM1, RemoveFromEmptyTree) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
 
-    BPlusTree<string> * tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> * tree = new SortList<string>(keyConverter, 1);
     tree->remove(2);
 
     const string* result = tree->search(2);
@@ -309,12 +313,12 @@ TEST(BPlusTreeM1, RemoveFromEmptyTree) {
     ASSERT_EQ(result, nullptr);
 }
 
-TEST(BPlusTreeM1, RemoveNotExisingElement) {
+TEST(CollectionM1, RemoveNotExisingElement) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
     const string data = "test";
     int key = keyConverter(data);
 
-    BPlusTree<string> * tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> * tree = new SortList<string>(keyConverter, 1);
     tree->insert(&data);
     tree->remove(2);
     const string* result1 = tree->search(2);
@@ -326,12 +330,12 @@ TEST(BPlusTreeM1, RemoveNotExisingElement) {
     ASSERT_EQ(*result2, data);
 }
 
-TEST(BPlusTreeM1, InsertAndRemoveOneElement) {
+TEST(CollectionM1, InsertAndRemoveOneElement) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
     const string data = "test";
     int key = keyConverter(data);
 
-    BPlusTree<string> * tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> * tree = new SortList<string>(keyConverter, 1);
     tree->insert(&data);
     tree->remove(key);
 
@@ -342,14 +346,14 @@ TEST(BPlusTreeM1, InsertAndRemoveOneElement) {
     ASSERT_EQ(result, nullptr);
 }
 
-TEST(BPlusTreeM1, InsertTwoElementsRemoveTheLowerKeyElement) {
+TEST(CollectionM1, InsertTwoElementsRemoveTheLowerKeyElement) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "tes";
     const string data2 = "test";
     int key1 = keyConverter(data1);
     int key2 = keyConverter(data2);
 
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> *tree = new SortList<string>(keyConverter, 1);
     tree->insert(&data1);
     tree->insert(&data2);
     tree->remove(key1);
@@ -363,14 +367,14 @@ TEST(BPlusTreeM1, InsertTwoElementsRemoveTheLowerKeyElement) {
     ASSERT_EQ(*result2, data2);
 }
 
-TEST(BPlusTreeM1, InsertTwoElementsRemoveTheUpperKeyElement) {
+TEST(CollectionM1, InsertTwoElementsRemoveTheUpperKeyElement) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "tes";
     const string data2 = "test";
     int key1 = keyConverter(data1);
     int key2 = keyConverter(data2);
 
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> *tree = new SortList<string>(keyConverter, 1);
     tree->insert(&data1);
     tree->insert(&data2);
     tree->remove(key2);
@@ -384,7 +388,7 @@ TEST(BPlusTreeM1, InsertTwoElementsRemoveTheUpperKeyElement) {
     ASSERT_EQ(result2, nullptr);
 }
 
-TEST(BPlusTreeM1, InsertThreeElementsRemoveLeft) {
+TEST(CollectionM1, InsertThreeElementsRemoveLeft) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -393,7 +397,7 @@ TEST(BPlusTreeM1, InsertThreeElementsRemoveLeft) {
     int key2 = keyConverter(data2);
     int key3 = keyConverter(data3);
 
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> *tree = new SortList<string>(keyConverter, 1);
     tree->insert(&data1);
     tree->insert(&data2);
     tree->insert(&data3);
@@ -411,7 +415,7 @@ TEST(BPlusTreeM1, InsertThreeElementsRemoveLeft) {
     ASSERT_EQ(*result3, data3);
 }
 
-TEST(BPlusTreeM1, InsertThreeElementsRemoveMiddle) {
+TEST(CollectionM1, InsertThreeElementsRemoveMiddle) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -420,7 +424,7 @@ TEST(BPlusTreeM1, InsertThreeElementsRemoveMiddle) {
     int key2 = keyConverter(data2);
     int key3 = keyConverter(data3);
 
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> *tree = new SortList<string>(keyConverter, 1);
     tree->insert(&data1);
     tree->insert(&data2);
     tree->insert(&data3);
@@ -438,7 +442,7 @@ TEST(BPlusTreeM1, InsertThreeElementsRemoveMiddle) {
     ASSERT_EQ(*result3, data3);
 }
 
-TEST(BPlusTreeM1, InsertThreeElementsRemoveRight) {
+TEST(CollectionM1, InsertThreeElementsRemoveRight) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -447,7 +451,7 @@ TEST(BPlusTreeM1, InsertThreeElementsRemoveRight) {
     int key2 = keyConverter(data2);
     int key3 = keyConverter(data3);
 
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> *tree = new SortList<string>(keyConverter, 1);
     tree->insert(&data1);
     tree->insert(&data2);
     tree->insert(&data3);
@@ -465,7 +469,7 @@ TEST(BPlusTreeM1, InsertThreeElementsRemoveRight) {
     ASSERT_EQ(result3, nullptr);
 }
 
-TEST(BPlusTreeM1, InsertFourElementsRemoveOne) {
+TEST(CollectionM1, InsertFourElementsRemoveOne) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -476,7 +480,7 @@ TEST(BPlusTreeM1, InsertFourElementsRemoveOne) {
     int key3 = keyConverter(data3);
     int key4 = keyConverter(data4);
 
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> *tree = new SortList<string>(keyConverter, 1);
     tree->insert(&data1);
     tree->insert(&data2);
     tree->insert(&data3);
@@ -497,7 +501,7 @@ TEST(BPlusTreeM1, InsertFourElementsRemoveOne) {
     ASSERT_EQ(*result4, data4);
 }
 
-TEST(BPlusTreeM1, InsertFiveElementsRemoveOne) {
+TEST(CollectionM1, InsertFiveElementsRemoveOne) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
     const string data2 = "tes";
@@ -510,7 +514,7 @@ TEST(BPlusTreeM1, InsertFiveElementsRemoveOne) {
     int key4 = keyConverter(data4);
     int key5 = keyConverter(data5);
 
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> *tree = new SortList<string>(keyConverter, 1);
     tree->insert(&data1);
     tree->insert(&data2);
     tree->insert(&data3);
@@ -535,11 +539,11 @@ TEST(BPlusTreeM1, InsertFiveElementsRemoveOne) {
 }
 
 /*
-TEST(BPlusTreeM1, InsertTwentyOneElementsRemoveAllFromFirstToLast) {
+TEST(CollectionM1, InsertTwentyOneElementsRemoveAllFromFirstToLast) {
     int elementCount = 21;
 
     std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> *tree = new SortList<string>(keyConverter, 1);
 
     string *data = new string[elementCount];
     int *keys = new int[elementCount];
@@ -568,11 +572,11 @@ TEST(BPlusTreeM1, InsertTwentyOneElementsRemoveAllFromFirstToLast) {
     }
 }
 
-TEST(BPlusTreeM1, InsertTwentyOneElementsRemoveAllFromLastToFirst) {
+TEST(CollectionM1, InsertTwentyOneElementsRemoveAllFromLastToFirst) {
     int elementCount = 21;
 
     std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 1);
+    SortList<string> *tree = new SortList<string>(keyConverter, 1);
 
     string *data = new string[elementCount];
     int *keys = new int[elementCount];
@@ -604,11 +608,11 @@ TEST(BPlusTreeM1, InsertTwentyOneElementsRemoveAllFromLastToFirst) {
 }
 */
 
-TEST(BPlusTreeM2, InsertSixElements) {
+TEST(SortListM2, InsertSixElements) {
     int elementCount = 6;
 
     std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
+    SortList<string> *tree = new SortList<string>(keyConverter, 2);
 
     string *data = new string[elementCount];
     int *keys = new int[elementCount];
@@ -628,11 +632,11 @@ TEST(BPlusTreeM2, InsertSixElements) {
     }
 }
 
-TEST(BPlusTreeM2, InsertTwentyOneElements) {
+TEST(SortListM2, InsertTwentyOneElements) {
     int elementCount = 21;
 
     std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
+    SortList<string> *tree = new SortList<string>(keyConverter, 2);
 
     string *data = new string[elementCount];
     int *keys = new int[elementCount];
@@ -652,12 +656,12 @@ TEST(BPlusTreeM2, InsertTwentyOneElements) {
     }
 }
 
-TEST(BPlusTreeM2, InsertSixElementsRemoveFirst) {
+TEST(SortListM2, InsertSixElementsRemoveFirst) {
     int elementCount = 6;
     int removeElementIndex = 0;
 
     std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
+    SortList<string> *tree = new SortList<string>(keyConverter, 2);
 
     string *data = new string[elementCount];
     int *keys = new int[elementCount];
@@ -685,12 +689,12 @@ TEST(BPlusTreeM2, InsertSixElementsRemoveFirst) {
     }
 }
 
-TEST(BPlusTreeM2, InsertSevenElementsRemoveFirst) {
+TEST(SortListM2, InsertSevenElementsRemoveFirst) {
     int elementCount = 7;
     int removeElementIndex = 0;
 
     std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
+    SortList<string> *tree = new SortList<string>(keyConverter, 2);
 
     string *data = new string[elementCount];
     int *keys = new int[elementCount];
@@ -716,12 +720,12 @@ TEST(BPlusTreeM2, InsertSevenElementsRemoveFirst) {
     }
 }
 
-TEST(BPlusTreeM2, InsertTwentyOneElementsRemoveFirst) {
+TEST(SortListM2, InsertTwentyOneElementsRemoveFirst) {
     int elementCount = 21;
     int removeElementIndex = 0;
 
     std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
+    SortList<string> *tree = new SortList<string>(keyConverter, 2);
 
     string *data = new string[elementCount];
     int *keys = new int[elementCount];
@@ -747,11 +751,11 @@ TEST(BPlusTreeM2, InsertTwentyOneElementsRemoveFirst) {
     }
 }
 
-TEST(BPlusTreeM2, InsertTwentyOneElementsRemoveAllFromFirstToLast) {
+TEST(SortListM2, InsertTwentyOneElementsRemoveAllFromFirstToLast) {
     int elementCount = 21;
 
     std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
+    SortList<string> *tree = new SortList<string>(keyConverter, 2);
 
     string *data = new string[elementCount];
     int *keys = new int[elementCount];
@@ -782,11 +786,11 @@ TEST(BPlusTreeM2, InsertTwentyOneElementsRemoveAllFromFirstToLast) {
     }
 }
 
-TEST(BPlusTreeM2, InsertTwentyOneElementsRemoveAllFromLastToFirst) {
+TEST(SortListM2, InsertTwentyOneElementsRemoveAllFromLastToFirst) {
     int elementCount = 21;
 
     std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
-    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
+    SortList<string> *tree = new SortList<string>(keyConverter, 2);
 
     string *data = new string[elementCount];
     int *keys = new int[elementCount];
@@ -817,7 +821,7 @@ TEST(BPlusTreeM2, InsertTwentyOneElementsRemoveAllFromLastToFirst) {
     }
 }
 
-TEST(BPlusTree, UltimateInsertAndDeleteTest) {
+TEST(SortList, UltimateInsertAndDeleteTest) {
     int elementCount = 1000;
 
     std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
@@ -832,7 +836,7 @@ TEST(BPlusTree, UltimateInsertAndDeleteTest) {
 
     for (int lowerBtreeCriteria = 2; lowerBtreeCriteria < 10; ++lowerBtreeCriteria) {
         cout << "lowerBtreeCriteria: " << lowerBtreeCriteria << endl;
-        BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, lowerBtreeCriteria);
+        SortList<string> *tree = new SortList<string>(keyConverter, lowerBtreeCriteria);
 
         for (int i = 0; i < elementCount; ++i) {
             tree->insert(&data[i]);

@@ -47,14 +47,14 @@ public:
         return root->search(key);
     }
 
-    T *remove(int key) override {
+    bool remove(int key) override {
 
         Node *result = root->remove(key);
 
         if (result != nullptr) {
             root = result;
         }
-        return nullptr;
+        return true;
     }
 
 

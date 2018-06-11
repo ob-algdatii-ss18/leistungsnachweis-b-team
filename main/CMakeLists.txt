@@ -1,4 +1,4 @@
-set(main_src main.cpp)
+set(main_src main.cpp ../libbtree/SortList.cpp ../libbtree/SortList.h)
 
 add_executable(btree-main ${main_src})
 
