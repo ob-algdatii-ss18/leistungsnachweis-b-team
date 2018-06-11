@@ -972,7 +972,7 @@ TEST(SortList, InsertTwentyOneElements) {
         ASSERT_EQ(*tree->search(keys[i]), data[i]);
     }
 }
-
+/*
 TEST(SortList, InsertSixElementsRemoveFirst) {
     int elementCount = 6;
     int removeElementIndex = 0;
@@ -1211,4 +1211,4 @@ TEST(SortListMemory, InsertTwentyOneElementsRemoveAllFromLastToFirstMemory) {
     delete[] data;
     delete[] keys;
 }
-
+*/
