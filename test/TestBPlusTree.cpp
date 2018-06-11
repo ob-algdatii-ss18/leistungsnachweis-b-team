@@ -821,7 +821,7 @@ TEST(SortList, InsertTwoElementsRemoveTheLowerKeyElement) {
 }
  */
 
-//worked 
+//worked
 TEST(SortList, InsertTwoElementsRemoveTheUpperKeyElement) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "tes";
@@ -842,7 +842,7 @@ TEST(SortList, InsertTwoElementsRemoveTheUpperKeyElement) {
     ASSERT_EQ(*result1, data1);
     ASSERT_EQ(result2, nullptr);
 }
-
+//failed
 TEST(SortList, InsertThreeElementsRemoveLeft) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
@@ -869,7 +869,8 @@ TEST(SortList, InsertThreeElementsRemoveLeft) {
     ASSERT_EQ(result2, nullptr);
     ASSERT_EQ(*result3, data3);
 }
-/*
+
+
 TEST(SortList, InsertThreeElementsRemoveMiddle) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
@@ -1004,7 +1005,7 @@ TEST(SortList, InsertSixElementsRemoveFirst) {
         }
     }
 }
-
+/*
 TEST(SortList, InsertTwentyOneElementsRemoveAllFromFirstToLast) {
     int elementCount = 21;
 
