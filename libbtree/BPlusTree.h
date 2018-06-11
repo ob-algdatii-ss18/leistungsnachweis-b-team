@@ -26,10 +26,14 @@ public:
     }
 
     bool insert(const T *t) override {
+        ProfilingResults *profilingResults = new ProfilingResults();
+        return insert(t, profilingResults);
+    }
+    bool insert(const T *t, ProfilingResults *profilingResults) override {
         int newElementKey = Collection<T>::valueToKeyConverter(*t);
         auto newLeaf = new Leaf(newElementKey, t);
 
-        Node *result = root->insert(newLeaf);
+        Node *result = root->insert(newLeaf, profilingResults);
 
         if (result != nullptr) {
             Node *left = root;
@@ -45,16 +49,25 @@ public:
 
 
     const T *search(int key) override {
-        return root->search(key);
+        ProfilingResults *profilingResults = new ProfilingResults();
+        return search(key, profilingResults);
     }
 
-    T *remove(int key) override {
+    const T *search(int key, ProfilingResults *profilingResults) override {
+        return root->search(key, profilingResults);
+    }
 
-        Node *result = root->remove(key);
+    bool remove(int key) override {
+        ProfilingResults *profilingResults = new ProfilingResults();
+        return remove(key, profilingResults);
+    }
+
+    bool remove(int key, ProfilingResults *profilingResults) override {
+        Node *result = root->remove(key, profilingResults);
         if (result != nullptr) {
             root = result;
         }
-        return nullptr;
+        return false;
     }
 
 
@@ -186,12 +199,19 @@ private:
             return result;
         }
 
-        Node *insert(Leaf *leaf) {
+        Node *insert(Leaf *leaf, ProfilingResults *profiling) {
             Node *result = nullptr;
+            profiling->insertFileAccess++;
 
             int index = 0;
+            if(filling > 0) {
+                profiling->insertComparisons++;
+            }
             while (index < filling && keys[index] <= leaf->key) {
                 ++index;
+                if(index < filling) {
+                    profiling->insertComparisons++;
+                }
             }
 
             if (deepest) {
@@ -221,7 +241,7 @@ private:
                 }
             } else {
                 Node *res;
-                res = static_cast<Node *>(children[index])->insert(leaf);
+                res = static_cast<Node *>(children[index])->insert(leaf,profiling);
 
                 if (res != nullptr) {
 
@@ -246,38 +266,54 @@ private:
             return result;
         }
 
-        const T *search(int key) {
+        const T *search(int key, ProfilingResults *profiling) {
             const T *result = nullptr;
+            profiling->searchFileAccess++;
 
             if (filling > 0) {
                 int index = 0;
+                if(filling > 0) {
+                    profiling->searchComparisons++;
+                }
                 while (index < filling && keys[index] <= key) {
                     ++index;
+                    if(index < filling) {
+                        profiling->searchComparisons++;
+                    }
                 }
 
                 if (deepest) {
+                    profiling->searchComparisons++;
                     if (children[index] != nullptr && static_cast<Leaf *>(children[index])->key == key) {
                         result = static_cast<Leaf *>(children[index])->data;
 
                     }
                 } else {
-                    result = static_cast<Node *>(children[index])->search(key);
+                    result = static_cast<Node *>(children[index])->search(key, profiling);
                 }
             }
 
             return result;
         }
 
-        Node *remove(int key) {
+        Node *remove(int key, ProfilingResults *profiling) {
             Node *result = nullptr;
+            profiling->removeFileAccess++;
 
             if (filling > 0) {
                 int index = 0;
+                if(filling > 0) {
+                    profiling->removeComparisons++;
+                }
                 while (index < filling && keys[index] <= key) {
                     ++index;
+                    if(index < filling) {
+                        profiling->removeComparisons++;
+                    }
                 }
 
                 if (deepest) {
+                    profiling->removeComparisons++;
                     if (children[index] != nullptr && static_cast<Leaf *>(children[index])->key == key) {
                         static_cast<Leaf *>(children[index])->~Leaf();
                         if (filling == 1) {
@@ -299,7 +335,7 @@ private:
                         }
                     }
                 } else {
-                    Node *res = static_cast<Node *>(children[index])->remove(key);
+                    Node *res = static_cast<Node *>(children[index])->remove(key,profiling);
                     if (res != nullptr) {
                         Node *concated;
                         Node *left;
