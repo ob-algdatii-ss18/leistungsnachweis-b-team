@@ -29,12 +29,12 @@ public:
         root = nullptr;
     }
 
-    bool insert(const T *t) override{
+    bool insert(const T *t) override {
         ProfilingResults *profilingResults = new ProfilingResults();
         return insert (t, profilingResults);
     }
 
-    bool insert(const T* t, ProfilingResults* p)override{
+    bool insert(const T* t, ProfilingResults* p) override {
         int newElementKey = Collection<T>::valueToKeyConverter(*t);
         Element *elem = new Element(newElementKey,t);
         if (nullptr == root){
@@ -62,7 +62,7 @@ public:
         return true;
     }
 
-    const T *search(int key){
+    const T *search(int key) override {
         ProfilingResults *profilingResults = new ProfilingResults();
         return search (key, profilingResults);
 
@@ -94,7 +94,7 @@ public:
         }
     }
 
-    bool remove(int key){
+    bool remove(int key) override {
         ProfilingResults *profilingResults = new ProfilingResults();
         return remove (key, profilingResults);
 
