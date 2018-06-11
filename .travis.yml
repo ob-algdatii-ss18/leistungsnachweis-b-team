@@ -11,6 +11,7 @@ before_install:
 
 before_script:
   - mkdir build
+  - mkdir html
   - cd build
   - cmake ..
   - cd ..
@@ -22,7 +23,6 @@ script:
   - cd ..
   - cd doc
   - doxygen
-  - make html
   - cd ..
 
 after_success:
