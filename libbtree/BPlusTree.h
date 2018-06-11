@@ -10,30 +10,39 @@
 
 #include "Collection.h"
 #include <iostream>
+#include <chrono>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 template<class T>
 class BPlusTree : public Collection<T> {
-
-
+private:
+    int fileCount = 0;
 public:
 
     BPlusTree(std::function<int(T)> keyConverter, const int mSize) : m(mSize), Collection<T>(keyConverter) {
-        root = new Node(m, nullptr, true);
+        root = new Node(m, true);
         root->children[0] = nullptr;
+        if(m <= 1) {
+            throw std::invalid_argument("The minimum size of the tree have to be at least 2");
+        }
     }
 
     bool insert(const T *t) override {
+        ProfilingResults *profilingResults = new ProfilingResults();
+        return insert(t, profilingResults);
+    }
+    bool insert(const T *t, ProfilingResults *profilingResults) override {
         int newElementKey = Collection<T>::valueToKeyConverter(*t);
-        Leaf *newLeaf = new Leaf(newElementKey, t);
+        auto newLeaf = new Leaf(newElementKey, t);
 
-        Node *result = root->insert(newLeaf);
+        Node *result = root->insert(newLeaf, profilingResults);
 
         if (result != nullptr) {
             Node *left = root;
-            root = new Node(m, nullptr, false);
-            left->parent = root;
+            root = new Node(m, false);
             root->children[0] = left;
-            result->parent = root;
             root->children[1] = result;
             root->keys[0] = result->leftKey();
             root->filling = 1;
@@ -44,17 +53,25 @@ public:
 
 
     const T *search(int key) override {
-        return root->search(key);
+        ProfilingResults *profilingResults = new ProfilingResults();
+        return search(key, profilingResults);
+    }
+
+    const T *search(int key, ProfilingResults *profilingResults) override {
+        return root->search(key, profilingResults);
     }
 
     bool remove(int key) override {
+        ProfilingResults *profilingResults = new ProfilingResults();
+        return remove(key, profilingResults);
+    }
 
-        Node *result = root->remove(key);
-
+    bool remove(int key, ProfilingResults *profilingResults) override {
+        Node *result = root->remove(key, profilingResults);
         if (result != nullptr) {
             root = result;
         }
-        return true;
+        return false;
     }
 
 
@@ -72,6 +89,26 @@ public:
         return os;
     }
 
+    std::string generateDotCode() {
+        std::stringstream stream;
+        stream << "digraph BTREE {" << std::endl;
+        stream << "node [shape = record,height=.1];" << std::endl;
+        stream << root->generateDotCode();
+        stream << "}" << std:: endl;
+        return stream.str();
+    }
+
+    void generateDotFile() {
+        std::stringstream filestream;
+        filestream << "/tmp/example_" << fileCount++ << ".dot";
+        std::string filename = filestream.str();
+
+        std::ofstream dotfile;
+        dotfile.open (filename);
+        dotfile << this->generateDotCode() << std::endl;
+        dotfile.close();
+    }
+
 
 private:
     struct Element {
@@ -80,6 +117,12 @@ private:
     struct Leaf : public Element {
         Leaf(int key, const T *data) : key(key), data(data) {
 
+        }
+
+        ~Leaf() {
+            //std::cout << "~Leaf()" << std::endl;
+            //std::cout << "data: " << data << std::endl;
+            //delete data;
         }
 
         const int key;
@@ -93,21 +136,30 @@ private:
     };
 
     struct Node : public Element {
-        Node(int m, Node *parent, bool deepest) : nodeSize(2 * m), keys(new int[2 * m + 1]), parent(parent),
+        Node(int m, bool deepest) : nodeSize(2 * m), keys(new int[2 * m + 1]),
                                                   children((Element **) malloc(sizeof(Element *) * (2 * m + 2))),
                                                   deepest(deepest) {
 
         }
 
-        Node *parent;
+        ~Node() {
+
+            delete[] keys;
+            for(int i = 0; i < nodeSize + 2; i++) {
+                if(children[i] != nullptr) {
+                    std::cout << "DANGER" << std::endl;
+                }
+                delete children[i];
+            }
+        }
+
         int *keys; //Array
         const int nodeSize;
         int filling = 0;
         Element **children;
-        bool deepest;
+        const bool deepest;
 
         friend std::ostream &operator<<(std::ostream &os, const Node &node) {
-
             os << "(";
             for (int i = 0; i < node.filling; i++) {
                 if (node.deepest) {
@@ -129,6 +181,32 @@ private:
             return os;
         }
 
+        std::string generateDotCode() {
+            std::stringstream stream;
+            stream << "\"" << this << "\"[label = \"";
+            for (int i = 0; i < filling; i++) {
+                stream << "<f" << i << "> |" << keys[i] << "|";
+            }
+            stream << "<f" << filling << ">\"];" << std::endl;
+
+            for (int i = 0; i <= filling; i++) {
+                if (deepest) {
+                    if(children[i] == nullptr) {
+                        stream << "\"" << children[i] << "\"[label = \"0\", shape=ellipse];" << std::endl;
+                    } else {
+                        stream << "\"" << children[i] << "\"[label = \"" << static_cast<Leaf *>(children[i])->key
+                                  << "\", shape=ellipse];" << std::endl;
+                    }
+                } else {
+                    stream << static_cast<Node *>(children[i])->generateDotCode();
+                }
+                stream << "\"" << this << "\":f" << i << " -> \"" << children[i] << "\";" << std::endl;
+
+            }
+
+            return stream.str();
+        }
+
         int leftKey() {
             int result;
             if (deepest) {
@@ -139,12 +217,19 @@ private:
             return result;
         }
 
-        Node *insert(Leaf *leaf) {
+        Node *insert(Leaf *leaf, ProfilingResults *profiling) {
             Node *result = nullptr;
+            profiling->insertFileAccess++;
 
             int index = 0;
+            if(filling > 0) {
+                profiling->insertComparisons++;
+            }
             while (index < filling && keys[index] <= leaf->key) {
                 ++index;
+                if(index < filling) {
+                    profiling->insertComparisons++;
+                }
             }
 
             if (deepest) {
@@ -174,9 +259,10 @@ private:
                 }
             } else {
                 Node *res;
-                res = static_cast<Node *>(children[index])->insert(leaf);
+                res = static_cast<Node *>(children[index])->insert(leaf,profiling);
 
                 if (res != nullptr) {
+
                     moveElementsRight(index);
                     keys[index] = res->leftKey();
                     children[index + 1] = res;
@@ -198,39 +284,56 @@ private:
             return result;
         }
 
-        const T *search(int key) {
+        const T *search(int key, ProfilingResults *profiling) {
             const T *result = nullptr;
+            profiling->searchFileAccess++;
 
             if (filling > 0) {
                 int index = 0;
+                if(filling > 0) {
+                    profiling->searchComparisons++;
+                }
                 while (index < filling && keys[index] <= key) {
                     ++index;
+                    if(index < filling) {
+                        profiling->searchComparisons++;
+                    }
                 }
 
                 if (deepest) {
+                    profiling->searchComparisons++;
                     if (children[index] != nullptr && static_cast<Leaf *>(children[index])->key == key) {
                         result = static_cast<Leaf *>(children[index])->data;
 
                     }
                 } else {
-                    result = static_cast<Node *>(children[index])->search(key);
+                    result = static_cast<Node *>(children[index])->search(key, profiling);
                 }
             }
 
             return result;
         }
 
-        Node *remove(int key) {
+        Node *remove(int key, ProfilingResults *profiling) {
             Node *result = nullptr;
+            profiling->removeFileAccess++;
 
             if (filling > 0) {
                 int index = 0;
+                if(filling > 0) {
+                    profiling->removeComparisons++;
+                }
                 while (index < filling && keys[index] <= key) {
                     ++index;
+                    if(index < filling) {
+                        profiling->removeComparisons++;
+                    }
                 }
 
                 if (deepest) {
+                    profiling->removeComparisons++;
                     if (children[index] != nullptr && static_cast<Leaf *>(children[index])->key == key) {
+                        static_cast<Leaf *>(children[index])->~Leaf();
                         if (filling == 1) {
                             if (children[0] == nullptr && index == 1) {
                                 filling = 0;
@@ -244,15 +347,13 @@ private:
                             }
                         } else {
                             moveElementsLeft(index);
-                            --filling;
                             if (filling < nodeSize / 2) {
                                 result = this;
                             }
                         }
                     }
                 } else {
-                    Node *res = static_cast<Node *>(children[index])->remove(key);
-
+                    Node *res = static_cast<Node *>(children[index])->remove(key,profiling);
                     if (res != nullptr) {
                         Node *concated;
                         Node *left;
@@ -264,14 +365,14 @@ private:
                             concated = concatNodes(static_cast<Node *>(children[index - 1]),
                                                    static_cast<Node *>(children[index]));
                         }
-
                         if (concated == nullptr) {
                             if (filling == 1) {
                                 result = left;
                             } else {
                                 moveElementsLeft(index);
-                                --filling;
-                                children[index] = left;
+                                if(index < filling) { //only if it's not the last element
+                                    children[index] = left;
+                                }
                                 if (filling < nodeSize / 2) {
                                     result = this;
                                 }
@@ -283,7 +384,6 @@ private:
                                 keys[0] = concated->keys[0];
                             } else {
                                 moveElementsLeft(index);
-                                --filling;
                                 if (filling < nodeSize / 2) {
                                     result = concated;
                                 }
@@ -320,12 +420,15 @@ private:
                 keys[i] = keys[i + 1];
                 children[i] = children[i + 1];
             }
+            children[filling + 1] = nullptr;
+            keys[filling + 1] = 0;
+            --filling;
         }
 
         Node *splitNode() {
             Node *rightNode = nullptr;
             if (filling == nodeSize) {
-                rightNode = new Node(nodeSize / 2, parent, deepest);
+                rightNode = new Node(nodeSize / 2, deepest);
                 int rightNodeIndex = 0;
                 for (int i = nodeSize / 2; i <= nodeSize; i++) {
                     rightNode->keys[rightNodeIndex] = keys[i + 1];
@@ -343,6 +446,7 @@ private:
 
         Node *concatNodes(Node *left, Node *right) {
             Node *result = nullptr;
+
             int overallFilling = left->filling + right->filling;
 
             if(left->children[0] == nullptr || right->children[0] == nullptr) {
@@ -355,6 +459,7 @@ private:
                 for (int i = 0; i <= right->filling; i++) {
                     if (right->children[i] != nullptr) {
                         left->children[index] = right->children[i];
+                        right->children[i] = nullptr;
                         if (left->deepest) {
                             left->keys[index - 1] = static_cast<Leaf *>(left->children[index])->key;
                         } else {
@@ -364,9 +469,11 @@ private:
                         ++index;
                     }
                 }
+
+                // delete of right node
+                right->~Node();
             } else {
-                Node *newUpper = new Node(nodeSize / 2, parent, deepest);
-                left->parent = newUpper;
+                auto newUpper = new Node(nodeSize / 2, deepest);
 
                 if (left->filling < overallFilling / 2) {
                     for (int i = left->filling + 1; i <= overallFilling / 2; ++i) {
@@ -378,7 +485,6 @@ private:
                             left->keys[i - 1] = static_cast<Node *>(left->children[i])->leftKey();
                         }
                         ++left->filling;
-                        --right->filling;
                     }
                 } else {
                     int leftFormerFilling = left->filling;
@@ -389,6 +495,7 @@ private:
                             right->moveElementsRight(0);
                         }
                         right->children[0] = left->children[i];
+                        left->children[i] = nullptr;
                         --left->filling;
                         ++right->filling;
 
