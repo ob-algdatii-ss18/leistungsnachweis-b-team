@@ -30,6 +30,11 @@ public:
     }
 
     bool insert(const T *t) override{
+        ProfilingResults *profilingResults = new ProfilingResults();
+        return insert (t, profilingResults);
+    }
+
+    bool insert(const T* t, ProfilingResults* p)override{
         int newElementKey = Collection<T>::valueToKeyConverter(*t);
         Element *elem = new Element(newElementKey,t);
         if (nullptr == root){
@@ -38,6 +43,7 @@ public:
         }
         Element* runner = root;
         while (runner->next != nullptr && runner->next->key < root->key){
+            p->insertComparisons++;
             //Iterate
             runner = runner->next;
             //insert counting here
@@ -50,6 +56,12 @@ public:
     }
 
     const T *search(int key){
+        ProfilingResults *profilingResults = new ProfilingResults();
+        return search (key, profilingResults);
+
+    }
+
+    const T *search(int key, ProfilingResults* p) override {
 
         if (root== nullptr){
             return nullptr;
@@ -70,10 +82,15 @@ public:
                 return nullptr;
             }
         }
-
     }
 
     bool remove(int key){
+        ProfilingResults *profilingResults = new ProfilingResults();
+        return remove (key, profilingResults);
+
+    }
+
+    bool remove(int key, ProfilingResults* p) override {
         if (root== nullptr){
             return false;
         }
@@ -100,7 +117,7 @@ public:
                 return false;
             }
         }
-    };
+    }
 
     friend std::ostream &operator<<(std::ostream &os, const SortList &list) {
         // 2m as max key count, 3 digits per key max, 2-Times because of comma, plus 2 for ()
