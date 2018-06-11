@@ -910,7 +910,7 @@ TEST(SortList, InsertThreeElementsRemoveRight) {
 }
 */
 
-
+//failed
 /* //failed
 TEST(SortList, InsertAndRemoveOneElement) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
@@ -927,10 +927,7 @@ TEST(SortList, InsertAndRemoveOneElement) {
 
     ASSERT_EQ(result, nullptr);
 }
- *
- */
 
-/*failed
 TEST(SortList, InsertTwoElementsRemoveTheLowerKeyElement) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "tes";
@@ -951,11 +948,7 @@ TEST(SortList, InsertTwoElementsRemoveTheLowerKeyElement) {
     ASSERT_EQ(result1, nullptr);
     ASSERT_EQ(*result2, data2);
 }
- */
 
-
-//failed
-/*
 TEST(SortList, InsertThreeElementsRemoveLeft) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
@@ -982,14 +975,8 @@ TEST(SortList, InsertThreeElementsRemoveLeft) {
     ASSERT_EQ(result2, nullptr);
     ASSERT_EQ(*result3, data3);
 }
-*/
 
-
-//fail after here
-
-
-/* failed
-TEST(SortList, InsertSixElementsRemoveFirst) {
+ TEST(SortList, InsertSixElementsRemoveFirst) {
     int elementCount = 6;
     int removeElementIndex = 0;
 
@@ -1021,10 +1008,7 @@ TEST(SortList, InsertSixElementsRemoveFirst) {
         }
     }
 }
-*/
 
-
-/* Failed
 TEST(SortList, InsertTwentyOneElementsRemoveAllFromFirstToLast) {
     int elementCount = 21;
 
@@ -1148,7 +1132,7 @@ TEST(SortList, UltimateInsertAndDeleteTest) {
         }
     }
 }
-
+/*
 TEST(SortList, InsertTwentyOneElementsRemoveAllAndRefill) {
     int elementCount = 21;
 
@@ -1231,3 +1215,4 @@ TEST(SortListMemory, InsertTwentyOneElementsRemoveAllFromLastToFirstMemory) {
     delete[] data;
     delete[] keys;
 }
+*/
