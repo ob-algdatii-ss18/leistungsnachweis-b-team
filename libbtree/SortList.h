@@ -48,6 +48,7 @@ public:
             runner = runner->next;
             //insert counting here
         }
+        p->insertComparisons++;
         //insert at place
         Element *other = runner->next;
         elem->next = other;
@@ -70,12 +71,15 @@ public:
         {
             Element *runner = root;
             while (runner != nullptr && runner->key < key){
+                p->searchComparisons++;
                 runner = runner->next;
             }
+            p->searchComparisons++;
             if (runner == nullptr){
                 return nullptr;
             }
             else if (runner->key == key){
+                p->searchComparisons++;
                 return runner->data;
             }
             else {
@@ -95,6 +99,7 @@ public:
             return false;
         }
         else if (root->key = key){
+            p->removeComparisons++;
             root = root->next;
         }
         else
@@ -102,13 +107,16 @@ public:
             //remove first object
             Element *runner = root;
             while (runner->next != nullptr && runner->next->key < key){
+                p->removeComparisons++;
                 runner = runner->next;
             }
+            p->removeComparisons++;
             //check if existant
             if (runner->next == nullptr){
                 return false;
             }
             else if (runner->next->key == key){
+                p->removeComparisons++;
                 Element *result = runner->next;
                 runner->next = result->next;
                 return true;
