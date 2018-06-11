@@ -653,6 +653,8 @@ TEST(BPlusTreeMemory, InsertTwentyOneElementsRemoveAllFromLastToFirstMemory) {
     delete[] keys;
 }
 
+
+
 TEST(SortList, SearchInAEmptyTree) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
 
@@ -662,7 +664,7 @@ TEST(SortList, SearchInAEmptyTree) {
     ASSERT_EQ(result, nullptr);
 }
 
-/*
+
 TEST(SortList, InsertAndSearchOneElement) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
     const string data = "test";
@@ -788,7 +790,7 @@ TEST(SortList, InsertAndRemoveOneElement) {
 
     ASSERT_EQ(result, nullptr);
 }
-
+/*
 TEST(SortList, InsertTwoElementsRemoveTheLowerKeyElement) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "tes";
