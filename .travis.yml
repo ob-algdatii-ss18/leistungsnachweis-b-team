@@ -14,7 +14,7 @@ script:
   - cd build
   - cmake --build .
   - ctest .
-  - cd test
+  - cd ..
 
 after_success:
-  - coveralls --exclude build/CMakeFiles/ --exclude build/gtest/ --gcov "llvm-cov gcov" --gcov-options '\-lp'
+  - coveralls --exclude build/CMakeFiles/ --exclude build/gtest/ --exclude gtest/ --exclude build/main/ --exclude main/ --gcov "llvm-cov gcov" --gcov-options '\-lp'
