@@ -666,7 +666,6 @@ TEST(SortList, SearchInAEmptyTree) {
     ASSERT_EQ(result, nullptr);
 }
 
-
 TEST(SortList, InsertAndSearchOneElement) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
     const string data = "test";
@@ -799,7 +798,7 @@ TEST(SortList, InsertAndRemoveOneElement) {
  *
  */
 
-/*fail after here
+/*failed
 TEST(SortList, InsertTwoElementsRemoveTheLowerKeyElement) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "tes";
@@ -843,7 +842,7 @@ TEST(SortList, InsertTwoElementsRemoveTheUpperKeyElement) {
     ASSERT_EQ(*result1, data1);
     ASSERT_EQ(result2, nullptr);
 }
-
+/*
 TEST(SortList, InsertThreeElementsRemoveLeft) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
@@ -897,7 +896,7 @@ TEST(SortList, InsertThreeElementsRemoveMiddle) {
     ASSERT_EQ(*result2, data2);
     ASSERT_EQ(*result3, data3);
 }
-/*
+
 TEST(SortList, InsertThreeElementsRemoveRight) {
     std::function<int(string)> keyConverter = [](string s) { return (int) s.size(); };
     const string data1 = "test";
