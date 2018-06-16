@@ -1,119 +1,48 @@
 #include <iostream>
 #include <functional>
 #include <BPlusTree.h>
-#include <test.h>
+#include <SortList.h>
 
 using namespace std;
-
-
-void test1();
-void test2();
-void test3();
 
 
 // main program for benchmarking
 int main (int argc, char *argv[]) {
 
-  test1();
-  test2();
-  test3();
+    int elementCount = 21;
+    string *data = new string[elementCount];
 
-/*
-  string t = "test1";
-  tree->insert(&t);
-  string u = "tes";
-  tree->insert(&u);
-  string* res = tree->search(5);
-  cout << "res: " << *res << endl;
+    std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
+    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
+    SortList<string> *list = new SortList<string>(keyConverter, 2);
 
+    ProfilingResults *treeProfile = new ProfilingResults();
+    ProfilingResults *listProfile = new ProfilingResults();
 
-  string v = "test66";
-  tree->insert(&v);
-*/
-}
+    for (int i = 0; i < elementCount; ++i) {
+        data[i] = std::to_string(i * 2 + 2);
+    }
 
-void test1() {
-  std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
-  const string data = "test";
-  int key = keyConverter(data);
+    for (int i = 0; i < elementCount; ++i) {
+        tree->insert(&data[i], treeProfile);
+        list->insert(&data[i], listProfile);
+    }
 
-  cout << "------------------" << endl;
-  cout << "TEST 1" << endl;
-  BPlusTree<string> * tree1 = new BPlusTree<string>(keyConverter, 1);
-  tree1->insert(&data);
-  const string* result1 = tree1->search(key);
-  if(*result1 == data) {
-    cout << "-> SUCCESS" << endl;
-  } else {
-    cout << "-> FAILED" << endl;
-  }
-  cout << "------------------" << endl;
-}
+    for (int i = 0; i < elementCount; ++i) {
+        int key = keyConverter(data[i]);
 
-void test2() {
-  std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
-  const string data1 = "test";
-  const string data2 = "tes";
-  int key1 = keyConverter(data1);
-  int key2 = keyConverter(data2);
+        if(tree->search(key, treeProfile) != list->search(key, listProfile)) {
+            cout << "ERROR" << endl;
+        }
+    }
 
-  cout << "------------------" << endl;
-  cout << "TEST 2" << endl;
-  BPlusTree<string> * tree = new BPlusTree<string>(keyConverter, 1);
-  tree->insert(&data1);
-  tree->insert(&data2);
+    cout << "treeProfile->insertComparisons: " << treeProfile->insertComparisons << endl;
+    cout << "listProfile->insertComparisons: " << listProfile->insertComparisons << endl;
+    cout << "treeProfile->insertFileAccess: " << treeProfile->insertFileAccess << endl;
+    cout << "listProfile->insertFileAccess: " << listProfile->insertFileAccess << endl;
+    cout << "treeProfile->searchComparisons: " << treeProfile->searchComparisons << endl;
+    cout << "listProfile->searchComparisons: " << listProfile->searchComparisons << endl;
+    cout << "treeProfile->searchFileAccess: " << treeProfile->searchFileAccess << endl;
+    cout << "listProfile->searchFileAccess: " << listProfile->searchFileAccess << endl;
 
-  const string* result1 = tree->search(key1);
-  if(*result1 == data1) {
-    cout << "-> SUCCESS1" << endl;
-  } else {
-    cout << "-> FAILED1" << endl;
-  }
-  const string* result2 = tree->search(key2);
-
-  if(*result2 == data2) {
-    cout << "-> SUCCESS2" << endl;
-  } else {
-    cout << "-> FAILED2" << endl;
-  }
-  cout << "------------------" << endl;
-}
-
-void test3() {
-  std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
-  string data1 = "test";
-  string data2 = "tes";
-  string data3 = "test5";
-  int key1 = keyConverter(data1);
-  int key2 = keyConverter(data2);
-  int key3 = keyConverter(data3);
-
-  cout << "------------------" << endl;
-  cout << "TEST 3" << endl;
-  BPlusTree<string> * tree = new BPlusTree<string>(keyConverter, 1);
-  tree->insert(&data1);
-  tree->insert(&data2);
-  tree->insert(&data3);
-
-  const string* result1 = tree->search(key1);
-  if(*result1 == data1) {
-    cout << "-> SUCCESS1" << endl;
-  } else {
-    cout << "-> FAILED1" << endl;
-  }
-
-  const string* result2 = tree->search(key2);
-  if(*result2 == data2) {
-    cout << "-> SUCCESS2" << endl;
-  } else {
-    cout << "-> FAILED2" << endl;
-  }
-
-  const string* result3 = tree->search(key3);
-  if(*result3 == data3) {
-    cout << "-> SUCCESS3" << endl;
-  } else {
-    cout << "-> FAILED3" << endl;
-  }
-  cout << "------------------" << endl;
 }
