@@ -520,6 +520,38 @@ TEST(BPlusTree, InsertTwentyOneElementsRemoveAllFromLastToFirst) {
     }
 }
 
+TEST(BPlusTree, ConcatLargeLeft) {
+    std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
+    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 3);
+    ProfilingResults *profilingResults = new ProfilingResults();
+
+    int removeElementIndex = 7;
+    int elementCount = 10;
+    string data[] = {"6", "8", "10", "12", "14", "16", "18", "20", "2", "4"};
+    int *keys = new int[elementCount];
+
+    for (int i = 0; i < elementCount; ++i) {
+        keys[i] = keyConverter(data[i]);
+        tree->insert(&data[i]);
+    }
+
+    for (int i = 0; i < elementCount; ++i) {
+        ASSERT_EQ(*tree->search(keys[i], profilingResults), data[i]);
+    }
+
+
+    tree->remove(keys[removeElementIndex], profilingResults);
+    cout << *tree << endl;
+
+    for (int i = 0; i < elementCount; ++i) {
+        if(i == removeElementIndex) {
+            ASSERT_EQ(tree->search(keys[i], profilingResults), nullptr);
+        } else {
+            ASSERT_EQ(*tree->search(keys[i], profilingResults), data[i]);
+        }
+    }
+}
+
 TEST(BPlusTree, UltimateInsertAndDeleteTest) {
     int elementCount = 1000;
 

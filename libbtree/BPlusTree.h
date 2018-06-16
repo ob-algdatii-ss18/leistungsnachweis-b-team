@@ -30,7 +30,7 @@ public:
     }
 
     bool insert(const T *t) override {
-        ProfilingResults *profilingResults = new ProfilingResults();
+        auto *profilingResults = new ProfilingResults();
         return insert(t, profilingResults);
     }
     bool insert(const T *t, ProfilingResults *profilingResults) override {
@@ -53,7 +53,7 @@ public:
 
 
     const T *search(int key) override {
-        ProfilingResults *profilingResults = new ProfilingResults();
+        auto *profilingResults = new ProfilingResults();
         return search(key, profilingResults);
     }
 
@@ -62,7 +62,7 @@ public:
     }
 
     bool remove(int key) override {
-        ProfilingResults *profilingResults = new ProfilingResults();
+        auto *profilingResults = new ProfilingResults();
         return remove(key, profilingResults);
     }
 
@@ -224,6 +224,7 @@ private:
             int index = 0;
             if(filling > 0) {
                 profiling->insertComparisons++;
+
             }
             while (index < filling && keys[index] <= leaf->key) {
                 ++index;
@@ -244,7 +245,12 @@ private:
                 } else {
                     moveElementsRight(index);
                     if (index == 0 && filling > 0) {
-                        children[0] = leaf;
+                        if(leaf->key < static_cast<Leaf *>(children[0])->key) {
+                            children[0] = leaf;
+                        } else {
+                            children[0] = children[1];
+                            children[1] = leaf;
+                        }
                         keys[0] = static_cast<Leaf *>(children[1])->key;
                     } else {
                         keys[index] = leaf->key;
@@ -488,7 +494,8 @@ private:
                     }
                 } else {
                     int leftFormerFilling = left->filling;
-                    for (int i = overallFilling / 2 + 1; i <= leftFormerFilling; ++i) {
+
+                    for (int i = leftFormerFilling; i > overallFilling / 2; --i) {
                         if(right->children[0] == nullptr) {
                             --right->filling;
                         } else {
@@ -506,8 +513,6 @@ private:
                         }
 
                     }
-
-
                 }
 
                 newUpper->children[0] = left;
