@@ -5,10 +5,7 @@
 
 using namespace std;
 
-
-// main program for benchmarking
-int main (int argc, char *argv[]) {
-
+void benchamrk() {
     int elementCount = 21;
     string *data = new string[elementCount];
 
@@ -44,5 +41,29 @@ int main (int argc, char *argv[]) {
     cout << "listProfile->searchComparisons: " << listProfile->searchComparisons << endl;
     cout << "treeProfile->searchFileAccess: " << treeProfile->searchFileAccess << endl;
     cout << "listProfile->searchFileAccess: " << listProfile->searchFileAccess << endl;
+}
 
+void dotcode() {
+  int elementCount = 21;
+  string *data = new string[elementCount];
+  std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
+  BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
+  ProfilingResults *treeProfile = new ProfilingResults();
+
+  for (int i = 0; i < elementCount; ++i) {
+    data[i] = std::to_string(i * 2 + 2);
+  }
+
+  for (int i = 0; i < elementCount; ++i) {
+    tree->insert(&data[i], treeProfile);
+    tree->generateDotFile();
+  }
+}
+
+// main program for benchmarking
+int main(int argc, char *argv[]) {
+
+//    benchamrk();
+
+  dotcode();
 }
