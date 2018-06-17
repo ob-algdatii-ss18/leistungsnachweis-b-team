@@ -552,6 +552,35 @@ TEST(BPlusTree, ConcatLargeLeft) {
     }
 }
 
+TEST(BPlusTree, RemoveMiddleElement) {
+    std::function<int(string)> keyConverter = [](string s) { return (int) std::stoi(s); };
+    BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 3);
+
+    int removeElementIndex = 5;
+    int elementCount = 8;
+    string data[] = {"2", "4", "6", "8", "10", "12", "14", "1"};
+    int *keys = new int[elementCount];
+
+    for (int i = 0; i < elementCount; ++i) {
+        keys[i] = keyConverter(data[i]);
+        tree->insert(&data[i]);
+    }
+
+    for (int i = 0; i < elementCount; ++i) {
+        ASSERT_EQ(*tree->search(keys[i]), data[i]);
+    }
+
+    ASSERT_EQ(tree->remove(keys[removeElementIndex]), true);
+
+    for (int i = 0; i < elementCount; ++i) {
+        if(i == removeElementIndex) {
+            ASSERT_EQ(tree->search(keys[i]), nullptr);
+        } else {
+            ASSERT_EQ(*tree->search(keys[i]), data[i]);
+        }
+    }
+}
+
 TEST(BPlusTree, UltimateInsertAndDeleteTest) {
     int elementCount = 1000;
 

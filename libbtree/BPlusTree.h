@@ -499,7 +499,7 @@ private:
                 } else {
                     int leftFormerFilling = left->filling;
 
-                    for (int i = leftFormerFilling; i > overallFilling / 2; --i) {
+                    for (int i = leftFormerFilling; i > overallFilling / 2 + 1; --i) {
                         if(right->children[0] == nullptr) {
                             --right->filling;
                         } else {
