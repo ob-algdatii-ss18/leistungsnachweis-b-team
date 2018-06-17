@@ -72,7 +72,9 @@ public:
         if (result != nullptr) {
             root = result;
         }
-        return *removeResult;
+        bool returnResult = *removeResult;
+        delete removeResult;
+        return returnResult;
     }
 
 
