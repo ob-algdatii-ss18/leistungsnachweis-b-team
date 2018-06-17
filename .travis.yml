@@ -20,4 +20,4 @@ script:
 
 
 after_success:
-  - coveralls --exclude build/CMakeFiles/ --exclude build/gtest/ --exclude gtest/ --exclude build/main/ --exclude main/ --gcov "llvm-cov gcov" --gcov-options '\-lp'
+  - coveralls --exclude build/CMakeFiles/ --exclude build/gtest/ --exclude gtest/ --exclude build/main/ --exclude main/ --exclude build/examples/ --exclude examples/ --gcov "llvm-cov gcov" --gcov-options '\-lp'
