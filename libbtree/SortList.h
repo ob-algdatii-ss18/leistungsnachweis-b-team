@@ -30,31 +30,35 @@ public:
     }
 
     bool insert(const T *t) override {
-        ProfilingResults *profilingResults = new ProfilingResults();
+        auto profilingResults = new ProfilingResults();
         return insert (t, profilingResults);
     }
 
     bool insert(const T* t, ProfilingResults* p) override {
         int newElementKey = Collection<T>::valueToKeyConverter(*t);
-        Element *elem = new Element(newElementKey,t);
+        auto elem = new Element(newElementKey,t);
+        int comparisonCount = 0;
         if (nullptr == root){
             root = elem;
             return true;
         }
         if (root->key > newElementKey){
             p->insertComparisons++;
+            p->insertFileAccess++;
             elem->next = root;
             root = elem;
             return true;
         }
         Element* runner = root;
         while (runner->next != nullptr && runner->next->key < newElementKey){
-            p->insertComparisons++;
+            comparisonCount++;
             //Iterate
             runner = runner->next;
             //insert counting here
         }
-        p->insertComparisons++;
+        comparisonCount++;
+        p->insertComparisons += comparisonCount;
+        p->insertFileAccess += comparisonCount / (2 * mSize);
         //insert at place
         Element *other = runner->next;
         elem->next = other;
@@ -63,13 +67,14 @@ public:
     }
 
     const T *search(int key) override {
-        ProfilingResults *profilingResults = new ProfilingResults();
+        auto profilingResults = new ProfilingResults();
         return search (key, profilingResults);
 
     }
 
     const T *search(int key, ProfilingResults* p) override {
-
+        int comparisonCount = 0;
+        const T* result = nullptr;
         if (root== nullptr){
             return nullptr;
         }
@@ -77,30 +82,29 @@ public:
         {
             Element *runner = root;
             while (runner != nullptr && runner->key < key){
-                p->searchComparisons++;
+                comparisonCount++;
                 runner = runner->next;
             }
-            p->searchComparisons++;
-            if (runner == nullptr){
-                return nullptr;
-            }
-            else if (runner->key == key){
-                p->searchComparisons++;
-                return runner->data;
-            }
-            else {
-                return nullptr;
+            comparisonCount++;
+            if (runner != nullptr && runner->key == key){
+                comparisonCount++;
+                result = runner->data;
             }
         }
+        p->searchComparisons += comparisonCount;
+        p->searchFileAccess += comparisonCount / (2 * mSize) + 1;
+        return result;
     }
 
     bool remove(int key) override {
-        ProfilingResults *profilingResults = new ProfilingResults();
+        auto profilingResults = new ProfilingResults();
         return remove (key, profilingResults);
 
     }
 
     bool remove(int key, ProfilingResults* p) override {
+        bool totalResult = false;
+        int comparisonCount = 0;
         if (root== nullptr){
             return false;
         }
@@ -113,24 +117,21 @@ public:
             //remove first object
             Element *runner = root;
             while (runner->next != nullptr && runner->next->key < key){
-                p->removeComparisons++;
+                comparisonCount++;
                 runner = runner->next;
             }
-            p->removeComparisons++;
+            comparisonCount++;
             //check if existant
-            if (runner->next == nullptr){
-                return false;
-            }
-            else if (runner->next->key == key){
-                p->removeComparisons++;
+            if (runner->next != nullptr && runner->next->key == key){
+                comparisonCount++;
                 Element *result = runner->next;
                 runner->next = result->next;
-                return true;
-            }else
-            {
-                return false;
+                totalResult = true;
             }
+            p->removeComparisons += comparisonCount;
+            p->removeFileAccess += comparisonCount / (2 * mSize) + 1;
         }
+        return totalResult;
     }
 
     friend std::ostream &operator<<(std::ostream &os, const SortList &list) {

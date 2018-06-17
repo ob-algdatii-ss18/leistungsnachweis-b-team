@@ -13,15 +13,6 @@ struct ProfilingResults {
   int insertFileAccess = 0;
   int removeComparisons = 0;
   int removeFileAccess = 0;
-
-  void add(ProfilingResults* other) {
-      this->searchComparisons += other->searchComparisons;
-      this->searchFileAccess += other->searchFileAccess;
-      this->insertComparisons += other->insertComparisons;
-      this->insertFileAccess += other->insertFileAccess;
-      this->removeComparisons += other->removeComparisons;
-      this->removeFileAccess += other->removeFileAccess;
-  }
 };
 
 /// Template Klasse für alle Listen die verglichen werden sollen.

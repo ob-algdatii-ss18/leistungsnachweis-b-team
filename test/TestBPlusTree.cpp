@@ -128,7 +128,7 @@ TEST(BPlusTree, RemoveFromEmptyTree) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
 
     BPlusTree<string> * tree = new BPlusTree<string>(keyConverter, 2);
-    tree->remove(2);
+    ASSERT_EQ(tree->remove(2), false);
 
     const string* result = tree->search(2);
 
@@ -144,7 +144,7 @@ TEST(BPlusTree, RemoveNotExisingElement) {
 
     BPlusTree<string> * tree = new BPlusTree<string>(keyConverter, 2);
     tree->insert(&data);
-    tree->remove(2);
+    ASSERT_EQ(tree->remove(2), false);
     const string* result1 = tree->search(2);
     const string* result2 = tree->search(key);
 
@@ -161,7 +161,7 @@ TEST(BPlusTree, InsertAndRemoveOneElement) {
 
     BPlusTree<string> * tree = new BPlusTree<string>(keyConverter, 2);
     tree->insert(&data);
-    tree->remove(key);
+    ASSERT_EQ(tree->remove(key), true);
 
     const string* result = tree->search(key);
 
@@ -180,7 +180,7 @@ TEST(BPlusTree, InsertTwoElementsRemoveTheLowerKeyElement) {
     BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
     tree->insert(&data1);
     tree->insert(&data2);
-    tree->remove(key1);
+    ASSERT_EQ(tree->remove(key1), true);
 
     const string *result1 = tree->search(key1);
     const string *result2 = tree->search(key2);
@@ -201,7 +201,7 @@ TEST(BPlusTree, InsertTwoElementsRemoveTheUpperKeyElement) {
     BPlusTree<string> *tree = new BPlusTree<string>(keyConverter, 2);
     tree->insert(&data1);
     tree->insert(&data2);
-    tree->remove(key2);
+    ASSERT_EQ(tree->remove(key2), true);
 
     const string *result1 = tree->search(key1);
     const string *result2 = tree->search(key2);
@@ -226,7 +226,7 @@ TEST(BPlusTree, InsertThreeElementsRemoveLeft) {
     tree->insert(&data2);
     tree->insert(&data3);
 
-    tree->remove(key2);
+    ASSERT_EQ(tree->remove(key2), true);
 
     const string *result1 = tree->search(key1);
     const string *result2 = tree->search(key2);
@@ -253,7 +253,7 @@ TEST(BPlusTree, InsertThreeElementsRemoveMiddle) {
     tree->insert(&data2);
     tree->insert(&data3);
 
-    tree->remove(key1);
+    ASSERT_EQ(tree->remove(key1), true);
 
     const string *result1 = tree->search(key1);
     const string *result2 = tree->search(key2);
@@ -280,7 +280,7 @@ TEST(BPlusTree, InsertThreeElementsRemoveRight) {
     tree->insert(&data2);
     tree->insert(&data3);
 
-    tree->remove(key3);
+    ASSERT_EQ(tree->remove(key3), true);
 
     const string *result1 = tree->search(key1);
     const string *result2 = tree->search(key2);
@@ -361,7 +361,7 @@ TEST(BPlusTree, InsertSixElementsRemoveFirst) {
 
     cout << *tree << endl;
 
-    tree->remove(keys[removeElementIndex]);
+    ASSERT_EQ(tree->remove(keys[removeElementIndex]), true);
 
     cout << *tree << endl;
 
@@ -393,7 +393,7 @@ TEST(BPlusTree, InsertSevenElementsRemoveFirst) {
         tree->insert(&data[i]);
     }
 
-    tree->remove(keys[removeElementIndex], profilingResults);
+    ASSERT_EQ(tree->remove(keys[removeElementIndex], profilingResults), true);
     cout << *tree << endl;
     ASSERT_EQ(profilingResults->removeFileAccess, 2);
     ASSERT_EQ(profilingResults->removeComparisons, 3);
@@ -431,7 +431,7 @@ TEST(BPlusTree, InsertTwentyOneElementsRemoveFirst) {
         tree->insert(&data[i], profilingResults);
     }
 
-    tree->remove(keys[removeElementIndex], profilingResults);
+    ASSERT_EQ(tree->remove(keys[removeElementIndex], profilingResults), true);
     ASSERT_EQ(profilingResults->removeFileAccess, 3);
     ASSERT_EQ(profilingResults->removeComparisons, 4);
 
@@ -469,7 +469,7 @@ TEST(BPlusTree, InsertTwentyOneElementsRemoveAllFromFirstToLast) {
 
     for (int removeElementIndex = 0; removeElementIndex < elementCount; ++removeElementIndex) {
 
-        tree->remove(keys[removeElementIndex]);
+        ASSERT_EQ(tree->remove(keys[removeElementIndex]), true);
 
         cout << *tree << endl;
 
@@ -506,7 +506,7 @@ TEST(BPlusTree, InsertTwentyOneElementsRemoveAllFromLastToFirst) {
 
         cout << keys[removeElementIndex] << endl;
 
-        tree->remove(keys[removeElementIndex]);
+        ASSERT_EQ(tree->remove(keys[removeElementIndex]), true);
 
         cout << *tree << endl;
 
@@ -540,7 +540,7 @@ TEST(BPlusTree, ConcatLargeLeft) {
     }
 
 
-    tree->remove(keys[removeElementIndex], profilingResults);
+    ASSERT_EQ(tree->remove(keys[removeElementIndex], profilingResults), true);
     cout << *tree << endl;
 
     for (int i = 0; i < elementCount; ++i) {
@@ -574,7 +574,7 @@ TEST(BPlusTree, UltimateInsertAndDeleteTest) {
         }
 
         for (int removeElementIndex = 0; removeElementIndex < elementCount; ++removeElementIndex) {
-            tree->remove(keys[removeElementIndex]);
+            ASSERT_EQ(tree->remove(keys[removeElementIndex]), true);
 
             for (int i = 0; i < elementCount; ++i) {
                 if(i <= removeElementIndex) {
@@ -590,7 +590,7 @@ TEST(BPlusTree, UltimateInsertAndDeleteTest) {
         }
 
         for (int removeElementIndex = elementCount - 1; removeElementIndex >= 0; --removeElementIndex) {
-            tree->remove(keys[removeElementIndex]);
+            ASSERT_EQ(tree->remove(keys[removeElementIndex]), true);
 
             for (int i = elementCount - 1; i >= 0; --i) {
                 if(i >= removeElementIndex) {
@@ -624,7 +624,7 @@ TEST(BPlusTree, InsertTwentyOneElementsRemoveAllAndRefill) {
 
     for (int removeElementIndex = elementCount-1; removeElementIndex >= 0; --removeElementIndex) {
 
-        tree->remove(keys[removeElementIndex]);
+        ASSERT_EQ(tree->remove(keys[removeElementIndex]), true);
 
         cout << *tree << endl;
 
@@ -669,7 +669,7 @@ TEST(BPlusTreeMemory, InsertTwentyOneElementsRemoveAllFromLastToFirstMemory) {
 
     for (int removeElementIndex = elementCount-1; removeElementIndex >= 0; --removeElementIndex) {
 
-        tree->remove(keys[removeElementIndex]);
+        ASSERT_EQ(tree->remove(keys[removeElementIndex]), true);
 
         cout << *tree << endl;
 
@@ -783,7 +783,7 @@ TEST(SortList, RemoveFromEmptyTree) {
     std::function<int(string)> keyConverter = [](string s){ return (int)s.size(); };
 
     SortList<string> * tree = new SortList<string>(keyConverter, 2);
-    tree->remove(2);
+    ASSERT_EQ(tree->remove(2), false);
 
     const string* result = tree->search(2);
 
@@ -799,7 +799,7 @@ TEST(SortList, RemoveNotExisingElement) {
 
     SortList<string> * tree = new SortList<string>(keyConverter, 2);
     tree->insert(&data);
-    tree->remove(2);
+    ASSERT_EQ(tree->remove(2), false);
     const string* result1 = tree->search(2);
     const string* result2 = tree->search(key);
 
@@ -820,7 +820,7 @@ TEST(SortList, InsertTwoElementsRemoveTheUpperKeyElement) {
     SortList<string> *tree = new SortList<string>(keyConverter, 2);
     tree->insert(&data1);
     tree->insert(&data2);
-    tree->remove(key2);
+    ASSERT_EQ(tree->remove(key2), true);
 
     const string *result1 = tree->search(key1);
     const string *result2 = tree->search(key2);
@@ -895,7 +895,7 @@ TEST(SortList, InsertThreeElementsRemoveMiddle) {
     tree->insert(&data2);
     tree->insert(&data3);
 
-    tree->remove(key1);
+    ASSERT_EQ(tree->remove(key1), true);
 
     const string *result1 = tree->search(key1);
     const string *result2 = tree->search(key2);
@@ -922,7 +922,7 @@ TEST(SortList, InsertThreeElementsRemoveRight) {
     tree->insert(&data2);
     tree->insert(&data3);
 
-    tree->remove(key3);
+    ASSERT_EQ(tree->remove(key3), true);
 
     const string *result1 = tree->search(key1);
     const string *result2 = tree->search(key2);
