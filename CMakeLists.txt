@@ -11,6 +11,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftest-coverage")
 enable_testing()
 
 add_subdirectory(main)
+add_subdirectory(examples)
 add_subdirectory(gtest)
 add_subdirectory(libbtree)
 add_subdirectory(test)
