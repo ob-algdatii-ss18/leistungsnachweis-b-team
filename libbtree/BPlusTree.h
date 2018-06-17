@@ -48,7 +48,7 @@ public:
             root->filling = 1;
         }
 
-        return false;
+        return true;
     }
 
 
@@ -67,11 +67,12 @@ public:
     }
 
     bool remove(int key, ProfilingResults *profilingResults) override {
-        Node *result = root->remove(key, profilingResults);
+        bool *removeResult = new bool(false);
+        Node *result = root->remove(key, profilingResults, removeResult);
         if (result != nullptr) {
             root = result;
         }
-        return false;
+        return *removeResult;
     }
 
 
@@ -320,7 +321,7 @@ private:
             return result;
         }
 
-        Node *remove(int key, ProfilingResults *profiling) {
+        Node *remove(int key, ProfilingResults *profiling, bool* removeResult) {
             Node *result = nullptr;
             profiling->removeFileAccess++;
 
@@ -357,9 +358,10 @@ private:
                                 result = this;
                             }
                         }
+                        *removeResult = true;
                     }
                 } else {
-                    Node *res = static_cast<Node *>(children[index])->remove(key,profiling);
+                    Node *res = static_cast<Node *>(children[index])->remove(key,profiling,removeResult);
                     if (res != nullptr) {
                         Node *concated;
                         Node *left;
