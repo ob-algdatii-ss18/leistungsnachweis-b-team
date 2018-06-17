@@ -39,12 +39,14 @@ public:
         Element *elem = new Element(newElementKey,t);
         if (nullptr == root){
             root = elem;
+            p->insertFileAccess++;
             return true;
         }
         if (root->key > newElementKey){
             p->insertComparisons++;
             elem->next = root;
             root = elem;
+            p->insertFileAccess++;
             return true;
         }
         Element* runner = root;
@@ -52,11 +54,13 @@ public:
             p->insertComparisons++;
             //Iterate
             runner = runner->next;
+            p->insertFileAccess++;
             //insert counting here
         }
         p->insertComparisons++;
         //insert at place
         Element *other = runner->next;
+        p->insertFileAccess++;
         elem->next = other;
         runner->next = elem;
         return true;
@@ -71,6 +75,7 @@ public:
     const T *search(int key, ProfilingResults* p) override {
 
         if (root== nullptr){
+            p->searchFileAccess++;
             return nullptr;
         }
         else
@@ -79,8 +84,10 @@ public:
             while (runner != nullptr && runner->key < key){
                 p->searchComparisons++;
                 runner = runner->next;
+                p->searchFileAccess++;
             }
             p->searchComparisons++;
+            p->searchFileAccess++;
             if (runner == nullptr){
                 return nullptr;
             }
@@ -102,11 +109,13 @@ public:
 
     bool remove(int key, ProfilingResults* p) override {
         if (root== nullptr){
+            p->removeFileAccess++;
             return false;
         }
         else if (root->key == key){
             p->removeComparisons++;
             root = root->next;
+            p->removeFileAccess++;
         }
         else
         {
@@ -114,6 +123,7 @@ public:
             Element *runner = root;
             while (runner->next != nullptr && runner->next->key < key){
                 p->removeComparisons++;
+                p->removeFileAccess++;
                 runner = runner->next;
             }
             p->removeComparisons++;
@@ -123,6 +133,7 @@ public:
             }
             else if (runner->next->key == key){
                 p->removeComparisons++;
+                p->removeFileAccess++;
                 Element *result = runner->next;
                 runner->next = result->next;
                 return true;
