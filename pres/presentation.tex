@@ -24,7 +24,7 @@
 \usepackage{enumerate}
 %------------------------------
 \begin{document}
-\title{B-Bäume}
+\title{$B^{+}$-Bäume}
 \subtitle{Algorithmen und Datenstrukturen II}
 \author{Furch, Gabler, Herpers, Schmid}
 \institute[HM]{Hochschule München}
@@ -34,17 +34,21 @@
 \titlepage
 \end{frame}
 
-\begin{frame}{B-Bäume}
+\begin{frame}{$B^{+}$-Bäume}
+$B^{+}$-Bäume mit Ordnung $m$ sind Indexbäume mit den folgenden Eigenschaften:
 \begin{itemize}
-	\item 
-	\item 
+	\item Alle Blätter haben die gleiche Tiefe.
+	\item Jeder Knoten mit Ausnahme der Wurzel und der Blätter hat wenigstens m Kinder.
+	\item Die Wurzel hat wenigstens 2 Kinder.
+	\item Jeder Knoten hat höchstens $2m$ Kinder.
+	\item Jeder Knoten mit $i$ Kindern hat $i-1$ Schlüssel.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Search I}
 \begin{itemize}
-	\item 
-	\item 
+	\item Starte bei Wurzel
+	\item Vergleiche ges. Schlüssel mit Schlüssel in Knoten und steige Ebene tiefer bis Knoten gefunden oder bei Blättern angekommen.
 \end{itemize}
 \end{frame}
 
@@ -55,9 +59,17 @@
 \end{frame}
 
 \begin{frame}{Insert I}
+Einfügen eines Wertes $\omega$
 \begin{itemize}
-	\item 
-	\item 
+	\item Mit Search entsprechende Blattseite suchen.
+	\item Passender Knoten $n<2m$ Elemente $\rightarrow$ $\omega$ einfügen
+	\item Passender Knoten $n=2m$ Elemente $\rightarrow$ neuer Knoten erzeugen
+	\begin{itemize}
+		\item Die ersten $m$ Werte auf Originalknoten
+		\item Die letzten $m$ Werte auf neuen Knoten
+		\item Mittleres Element auf entsprechenden Knoten nach oben
+		\item Vorgang rekursiv bis zur Wurzel wiederholen
+	\end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -83,9 +95,11 @@ Insert 36
 \end{frame}
 
 \begin{frame}{Remove I}
+Löschen eines Wertes $\omega$
 \begin{itemize}
-	\item 
-	\item 
+	\item Mit Search entsprechende Stelle finden
+	\item Falls $\omega$ auf Blattseite gespeichert $\rightarrow$ Wert löschen, evtl. Unterlauf behandeln
+	\item Falls $\omega$ nicht auf Blattseite gespeichert $\rightarrow$ Wert durch nächst-kleineres Element ersetzen, evtl. Unterlauf behandeln
 \end{itemize}
 \end{frame}
 
